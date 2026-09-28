@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import { globalStyles } from "@/styles";
 import "./globals.css";
 
@@ -16,7 +17,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR">
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster
+          position="top-right"
+          closeButton={false}
+          richColors={false}
+          duration={4000}
+        />
+      </body>
     </html>
   );
 }
