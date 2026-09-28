@@ -37,80 +37,120 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const variantStyle: CSSProperties =
       variant === "primary"
         ? {
-            background:
-              "linear-gradient(to right, var(--color-primary), var(--color-brand))",
-            color: "#fff",
+            backgroundColor: "var(--colors-primary)",
+            color: "#FFFFFF",
           }
         : variant === "tertiary"
-          ? { backgroundColor: "var(--color-brand)", color: "#fff" }
+          ? {
+              backgroundColor: "var(--colors-primaryLight)",
+              color: "#FFFFFF",
+            }
           : variant === "secondary"
             ? {
-                backgroundColor: "var(--color-surface-input)",
-                border: "1px solid var(--color-border-subtle)",
-                color: "#fff",
+                backgroundColor: "var(--colors-backgroundSecondary)",
+                border: "1px solid var(--colors-border)",
+                color: "var(--colors-text)",
               }
             : variant === "danger"
               ? {
-                  backgroundColor: "var(--color-danger, #dc2626)",
-                  color: "#fff",
+                  backgroundColor: "var(--colors-negative)",
+                  color: "#FFFFFF",
                 }
               : variant === "danger-ghost"
                 ? {
                     backgroundColor: "transparent",
-                    border: "1px solid var(--color-danger, #dc2626)",
-                    color: "var(--color-danger, #dc2626)",
+                    border: "1px solid var(--colors-negative)",
+                    color: "var(--colors-negative)",
                   }
                 : variant === "success-ghost"
                   ? {
-                      backgroundColor: "var(--color-success-bg)",
-                      border: "1px solid var(--color-success-light)",
-                      color: "var(--color-success-light)",
+                      backgroundColor: "var(--colors-positiveBackground)",
+                      border: "1px solid var(--colors-positive)",
+                      color: "var(--colors-positive)",
                     }
                   : {
                       backgroundColor: "transparent",
                       border: "1px solid transparent",
-                      color: "var(--text-secondary)",
+                      color: "var(--colors-textSecondary)",
                     };
 
-    const sizeClass =
+    const sizeStyle: CSSProperties =
       size === "sm"
-        ? "h-8 px-3 text-[13px] rounded-lg"
-        : "px-4 py-3 text-sm rounded-xl";
+        ? {
+            height: "32px",
+            padding: "0 12px",
+            fontSize: "13px",
+            borderRadius: "var(--radii-lg)",
+          }
+        : {
+            padding: "12px 16px",
+            fontSize: "14px",
+            borderRadius: "var(--radii-lg)",
+          };
 
     return (
       <button
         ref={ref}
         type={type}
         disabled={disabled || isLoading}
-        suppressHydrationWarning
-        className={`btn-${variant} ${fullWidth ? "w-full" : "w-auto"} ${sizeClass} inline-flex items-center justify-center gap-1.5 whitespace-nowrap font-semibold transition duration-200 cursor-pointer hover:scale-[1.01] hover:opacity-95 active:scale-[0.99] disabled:opacity-50 disabled:cursor-default disabled:hover:scale-100 focus:outline-none ${className}`}
-        style={{ ...variantStyle, ...style }}
+        className={`btn-${variant} ${className}`}
+        style={{
+          ...variantStyle,
+          ...sizeStyle,
+          width: fullWidth ? "100%" : "auto",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "6px",
+          whiteSpace: "nowrap",
+          fontWeight: 600,
+          fontFamily: "inherit",
+          border: variantStyle.border ?? "1px solid transparent",
+          cursor: disabled || isLoading ? "not-allowed" : "pointer",
+          transition: "all 200ms ease",
+          opacity: disabled || isLoading ? 0.5 : 1,
+          ...style,
+        }}
         {...props}
       >
         {isLoading ? <span>{loadingLabel}</span> : children}
 
         <style jsx>{`
+          button {
+            outline: none;
+          }
+
           button:focus-visible {
-            box-shadow: 0 0 0 2px var(--color-focus-ring);
+            box-shadow: 0 0 0 3px var(--colors-primaryLight);
           }
 
-          .btn-secondary:hover {
-            border-color: var(--color-border-hover);
-            background-color: var(--color-surface-subtle);
+          button:not(:disabled):hover {
+            transform: scale(1.01);
+            opacity: 0.95;
           }
 
-          .btn-ghost:hover {
-            color: #fff;
+          button:not(:disabled):active {
+            transform: scale(0.99);
           }
 
-          .btn-danger-ghost:hover {
-            background-color: var(--color-danger, #dc2626);
-            color: #fff;
+          .btn-secondary:not(:disabled):hover {
+            border-color: var(--colors-textMuted);
+            background-color: var(--colors-border);
           }
 
-          .btn-success-ghost:hover {
-            background-color: var(--color-success-light);
-            color: #0a0a0a;
+          .btn-ghost:not(:disabled):hover {
+            color: var(--colors-primary);
+            background-color: var(--colors-backgroundSecondary);
+          }
+
+          .btn-danger-ghost:not(:disabled):hover {
+            background-color: var(--colors-negative);
+            color: #ffffff;
+          }
+
+          .btn-success-ghost:not(:disabled):hover {
+            background-color: var(--colors-positive);
+            color: #ffffff;
           }
         `}</style>
       </button>
