@@ -1,6 +1,6 @@
+import { globalStyles } from "@/styles";
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
-import { globalStyles } from "@/styles";
 
 globalStyles();
 
