@@ -1,13 +1,16 @@
+import Link from "next/link";
 import { PawPrint } from "lucide-react";
 
 interface LogoProps {
   /** Versão para fundos escuros (footer). */
   light?: boolean;
   className?: string;
+  /** Se informado, a logo vira um link para esse destino. */
+  href?: string;
 }
 
-export default function Logo({ light = false, className = "" }: LogoProps) {
-  return (
+export default function Logo({ light = false, className = "", href }: LogoProps) {
+  const logo = (
     <div className={`logo ${light ? "logo-light" : ""} ${className}`}>
       <span className="logo-mark">
         <PawPrint size={22} aria-hidden />
@@ -69,5 +72,18 @@ export default function Logo({ light = false, className = "" }: LogoProps) {
         }
       `}</style>
     </div>
+  );
+
+  if (!href) return logo;
+
+  // O estilo do link fica inline porque o styled-jsx não alcança o <Link>.
+  return (
+    <Link
+      href={href}
+      aria-label="PetHub, ir para a página inicial"
+      style={{ display: "inline-flex", textDecoration: "none", color: "inherit" }}
+    >
+      {logo}
+    </Link>
   );
 }
