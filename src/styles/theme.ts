@@ -45,7 +45,7 @@ export const { styled, css, globalCss, createTheme, theme } = createStitches({
     },
 
     fonts: {
-      sans: "Inter, sans-serif",
+      sans: "Arial, Helvetica, sans-serif",
       mono: "monospace",
     },
 
