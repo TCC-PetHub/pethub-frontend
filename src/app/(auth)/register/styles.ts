@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { styled } from "@/styles";
 
 export const Container = styled("main", {
@@ -11,7 +9,8 @@ export const Container = styled("main", {
   display: "flex",
   overflowY: "auto",
   padding: "$md",
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor:
+    "color-mix(in srgb, var(--colors-adoptedBackground) 35%, var(--colors-background))",
   fontFamily: "$sans",
 
   "&, & *": {
@@ -73,42 +72,6 @@ export const BrandText = styled("div", {
     fontWeight: 600,
     letterSpacing: "0.14em",
     textTransform: "uppercase",
-  },
-});
-
-export const Tabs = styled("nav", {
-  display: "grid",
-  gridTemplateColumns: "1fr 1fr",
-  gap: "$xs",
-  padding: "$xs",
-  marginBottom: "$md",
-  borderRadius: "$lg",
-  backgroundColor: "$backgroundSecondary",
-});
-
-export const Tab = styled(Link, {
-  padding: "8px 0",
-  borderRadius: "$md",
-  color: "$textSecondary",
-  fontSize: "$sm",
-  fontWeight: 500,
-  textAlign: "center",
-  textDecoration: "none",
-  transition: "all 200ms ease",
-
-  "&:hover": {
-    color: "$text",
-  },
-
-  variants: {
-    active: {
-      true: {
-        backgroundColor: "$background",
-        boxShadow: "$sm",
-        color: "$text",
-        fontWeight: 600,
-      },
-    },
   },
 });
 

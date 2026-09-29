@@ -7,6 +7,7 @@ import { ArrowRight, PawPrint } from "lucide-react";
 import { z } from "zod";
 
 import Button from "@/components/common/Button";
+import { AuthTab, AuthTabs } from "@/components/common/AuthTabs";
 import Input from "@/components/common/Input";
 import { toast } from "@/components/common/Toast";
 import {
@@ -104,14 +105,14 @@ function LoginContent() {
                 </Link>
 
                 {/* AuthTabs: navegação entre login e cadastro. */}
-                <nav className="auth-tabs" aria-label="Acesso à conta">
-                    <span className="auth-tab active" aria-current="page">
+                <AuthTabs aria-label="Acesso à conta">
+                    <AuthTab as="span" active aria-current="page">
                         Entrar
-                    </span>
-                    <Link className="auth-tab" href="/register">
+                    </AuthTab>
+                    <AuthTab href={`/register?perfil=${currentProfile}`}>
                         Criar conta
-                    </Link>
-                </nav>
+                    </AuthTab>
+                </AuthTabs>
 
                 {/* LoginForm: perfil, credenciais, preferências e envio. */}
                 <form className="login-form" onSubmit={handleLoginSubmit} noValidate>

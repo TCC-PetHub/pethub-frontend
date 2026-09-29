@@ -7,6 +7,7 @@ export const loginStyles = css({
   display: "grid",
   placeItems: "center",
   padding: "$md",
+  fontFamily: "$sans",
   backgroundColor:
     "color-mix(in srgb, var(--colors-adoptedBackground) 35%, var(--colors-background))",
 
@@ -44,42 +45,13 @@ export const loginStyles = css({
     display: "flex",
     flexDirection: "column",
     lineHeight: 1.1,
-    strong: { fontSize: "$xl", color: "$primary" },
+    strong: { fontSize: "$lg", fontWeight: 700, color: "$primary" },
     span: {
       marginTop: "2px",
-      fontSize: "9px",
+      fontSize: "10px",
       fontWeight: 600,
       letterSpacing: "0.14em",
       color: "$primary",
-    },
-  },
-
-  /* Abas */
-  ".auth-tabs": {
-    display: "flex",
-    gap: "$xs",
-    padding: "$xs",
-    marginBottom: "$lg",
-    backgroundColor: "$backgroundSecondary",
-    borderRadius: "$lg",
-  },
-  ".auth-tab": {
-    flex: 1,
-    padding: "$sm",
-    textAlign: "center",
-    fontSize: "$sm",
-    fontWeight: 500,
-    color: "$textSecondary",
-    borderRadius: "$md",
-    transition: "color 200ms ease",
-    textDecoration: "none",
-    "&:hover": { color: "$primary" },
-    "&:focus-visible": { outline: "none", boxShadow: ring },
-    "&.active": {
-      backgroundColor: "$background",
-      color: "$primary",
-      fontWeight: 700,
-      boxShadow: "$sm",
     },
   },
 
@@ -93,7 +65,7 @@ export const loginStyles = css({
     display: "flex",
     flexDirection: "column",
     gap: "6px",
-    label: { fontSize: "$sm", fontWeight: 700 },
+    label: { fontSize: "13px", fontWeight: 600 },
   },
 
   /* Seletor de perfil (links com o perfil na URL) */
@@ -102,7 +74,12 @@ export const loginStyles = css({
     margin: 0,
     padding: 0,
     border: 0,
-    legend: { padding: 0, marginBottom: "6px", fontSize: "$sm", fontWeight: 700 },
+    legend: {
+      padding: 0,
+      marginBottom: "6px",
+      fontSize: "13px",
+      fontWeight: 600,
+    },
   },
   ".profile-options": {
     display: "grid",
@@ -113,7 +90,7 @@ export const loginStyles = css({
     display: "block",
     padding: "10px $sm",
     textAlign: "center",
-    fontSize: "$xs",
+    fontSize: "13px",
     fontWeight: 500,
     color: "$textSecondary",
     backgroundColor: "$background",
@@ -142,9 +119,9 @@ export const loginStyles = css({
     alignItems: "center",
     justifyContent: "space-between",
     gap: "$sm",
-    fontSize: "$xs",
+    fontSize: "11px",
     a: {
-      fontWeight: 700,
+      fontWeight: 600,
       color: "$primary",
       "&:hover": { textDecoration: "underline" },
     },
@@ -164,7 +141,7 @@ export const loginStyles = css({
     alignItems: "center",
     gap: "$md",
     margin: "$md 0",
-    fontSize: "$xs",
+    fontSize: "11px",
     color: "$textMuted",
     "&::before, &::after": {
       content: '""',

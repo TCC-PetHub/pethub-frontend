@@ -1,13 +1,16 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, HeartHandshake } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import Button from "@/components/common/Button";
+import { AuthTab, AuthTabs } from "@/components/common/AuthTabs";
 import Input from "@/components/common/Input";
 import { toast } from "@/components/common/Toast";
 
@@ -24,8 +27,6 @@ import {
   Hint,
   Label,
   Row,
-  Tab,
-  Tabs,
   TypeOption,
   TypeToggle,
 } from "./styles";
@@ -69,19 +70,24 @@ const signUpSchema = z
 
 type SignUpData = z.infer<typeof signUpSchema>;
 
-export default function SignUpPage() {
+function SignUpContent() {
+  const searchParams = useSearchParams();
+  const requestedProfile = searchParams.get("perfil");
+  const defaultUserType = requestedProfile === "organization" ? "ngo" : "adopter";
+
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     setValue,
     formState: { errors, isSubmitting },
   } = useForm<SignUpData>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { userType: "ngo", acceptedTerms: true },
+    defaultValues: { userType: defaultUserType, acceptedTerms: true },
   });
 
-  const isNgo = watch("userType") === "ngo";
+  const selectedUserType = useWatch({ control, name: "userType" });
+  const isNgo = selectedUserType === "ngo";
 
   async function onSubmit(data: SignUpData) {
     try {
@@ -106,12 +112,14 @@ export default function SignUpPage() {
           </BrandText>
         </Brand>
 
-        <Tabs aria-label="Acesso">
-          <Tab href="/login">Entrar</Tab>
-          <Tab as="span" active aria-current="page">
+        <AuthTabs aria-label="Acesso">
+          <AuthTab href={`/login?perfil=${isNgo ? "organization" : "adopter"}`}>
+            Entrar
+          </AuthTab>
+          <AuthTab as="span" active aria-current="page">
             Criar conta
-          </Tab>
-        </Tabs>
+          </AuthTab>
+        </AuthTabs>
 
         <Form onSubmit={handleSubmit(onSubmit)} noValidate>
           <Field>
@@ -258,5 +266,13 @@ export default function SignUpPage() {
         </Form>
       </Card>
     </Container>
+  );
+}
+
+export default function SignUpPage() {
+  return (
+    <Suspense fallback={null}>
+      <SignUpContent />
+    </Suspense>
   );
 }
