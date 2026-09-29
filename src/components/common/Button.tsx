@@ -59,7 +59,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
               : variant === "danger-ghost"
                 ? {
                     backgroundColor: "transparent",
-                    border: "1px solid var(--colors-negative)",
+                    border: "1px solid $var(--colors-negative)",
                     color: "var(--colors-negative)",
                   }
                 : variant === "success-ghost"
