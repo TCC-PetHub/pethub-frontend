@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Hourglass } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -17,6 +17,7 @@ import Logo from "@/components/common/Logo";
 import { toast } from "@/components/common/Toast";
 
 import {
+  BackLink,
   Card,
   Consent,
   Container,
@@ -25,12 +26,17 @@ import {
   Form,
   Hint,
   Label,
+  PendingBox,
+  PendingEmoji,
+  PendingIcon,
+  PendingText,
+  PendingTitle,
   Row,
   TypeOption,
   TypeToggle,
 } from "./styles";
 
-const signUpSchema = z
+const registerSchema = z
   .object({
     userType: z.enum(["adopter", "ngo"]),
     name: z.string().min(1, "Campo obrigatório"),
@@ -67,12 +73,16 @@ const signUpSchema = z
     });
   });
 
-type SignUpData = z.infer<typeof signUpSchema>;
+type RegisterData = z.infer<typeof registerSchema>;
 
-function SignUpContent() {
+function RegisterContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const requestedProfile = searchParams.get("perfil");
-  const defaultUserType = requestedProfile === "organization" ? "ngo" : "adopter";
+  const defaultUserType =
+    requestedProfile === "organization" ? "ngo" : "adopter";
+
+  const [pendingReview, setPendingReview] = useState(false);
 
   const {
     register,
@@ -80,24 +90,54 @@ function SignUpContent() {
     control,
     setValue,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpData>({
-    resolver: zodResolver(signUpSchema),
+  } = useForm<RegisterData>({
+    resolver: zodResolver(registerSchema),
     defaultValues: { userType: defaultUserType, acceptedTerms: true },
   });
 
   const selectedUserType = useWatch({ control, name: "userType" });
   const isNgo = selectedUserType === "ngo";
 
-  async function onSubmit(data: SignUpData) {
+  async function onSubmit(data: RegisterData) {
     try {
       // TODO: chamada real da API
       console.log(data);
+
+      if (data.userType === "ngo") {
+        setPendingReview(true);
+        return;
+      }
+
       toast.success("Conta criada com sucesso");
+      router.push("/public-portal");
     } catch {
       toast.error("Não foi possível criar a conta");
     }
   }
 
+  if (pendingReview) {
+    return (
+      <Container>
+        <Card>
+          <Brand>
+            <Logo />
+          </Brand>
+
+          <PendingBox role="status" aria-live="polite">
+            <PendingIcon aria-hidden>
+              <Hourglass size={44} strokeWidth={1.75} />
+            </PendingIcon>
+            <PendingTitle>Solicitação enviada para análise</PendingTitle>
+            <PendingText>
+              Recebemos o cadastro da sua organização. Assim que a análise for
+              concluída, entraremos em contato.
+            </PendingText>
+            <BackLink href="/">Voltar para o início</BackLink>
+          </PendingBox>
+        </Card>
+      </Container>
+    );
+  }
   return (
     <Container>
       <Card>
@@ -262,10 +302,10 @@ function SignUpContent() {
   );
 }
 
-export default function SignUpPage() {
+export default function RegisterPage() {
   return (
     <Suspense fallback={null}>
-      <SignUpContent />
+      <RegisterContent />
     </Suspense>
   );
 }
