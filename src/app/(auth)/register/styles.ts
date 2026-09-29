@@ -36,45 +36,6 @@ export const Card = styled("section", {
   },
 });
 
-export const Brand = styled("header", {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  gap: "$sm",
-  marginBottom: "$md",
-});
-
-export const BrandLogo = styled("span", {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  width: 36,
-  height: 36,
-  borderRadius: "$lg",
-  backgroundColor: "$primaryLight",
-  color: "#FFFFFF",
-});
-
-export const BrandText = styled("div", {
-  display: "flex",
-  flexDirection: "column",
-  lineHeight: 1.2,
-
-  strong: {
-    color: "$text",
-    fontSize: "$lg",
-    fontWeight: 700,
-  },
-
-  span: {
-    color: "$textMuted",
-    fontSize: 10,
-    fontWeight: 600,
-    letterSpacing: "0.14em",
-    textTransform: "uppercase",
-  },
-});
-
 export const Form = styled("form", {
   display: "flex",
   flexDirection: "column",

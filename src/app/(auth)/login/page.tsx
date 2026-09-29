@@ -2,13 +2,15 @@
 
 import { Suspense, useState, type ChangeEvent, type FormEvent } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { ArrowRight, PawPrint } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 import { z } from "zod";
 
 import Button from "@/components/common/Button";
 import { AuthTab, AuthTabs } from "@/components/common/AuthTabs";
+import Brand from "@/components/common/Brand";
 import Input from "@/components/common/Input";
+import Logo from "@/components/common/Logo";
 import { toast } from "@/components/common/Toast";
 import {
     loginSchema,
@@ -36,6 +38,7 @@ function GoogleIcon() {
 }
 
 function LoginContent() {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const [loginFormErrors, setLoginFormErrors] = useState<LoginFormErrors>({});
 
@@ -84,25 +87,17 @@ function LoginContent() {
 
         setLoginFormErrors({});
 
-        // TODO: autenticar com { ...validationResult.data, remember: loginFormData.has("remember") }
-        toast.info("A autenticação estará disponível em breve.");
+        router.push("/public-portal");
     }
 
     // LoginPage: contêiner principal da página.
     return (
         <main className={loginStyles()}>
             {/* LoginPanel: painel que agrupa os componentes de autenticação. */}
-            <section className="login-panel" aria-labelledby="brand-name">
-                {/* Brand: símbolo e nome do PetHub. */}
-                <Link className="brand" href="/" aria-label="PetHub, página inicial">
-                    <span className="brand-icon" aria-hidden="true">
-                        <PawPrint size={18} strokeWidth={2.5} />
-                    </span>
-                    <span className="brand-copy">
-                        <strong id="brand-name">PetHub</strong>
-                        <span>PROTEÇÃO ANIMAL</span>
-                    </span>
-                </Link>
+            <section className="login-panel" aria-label="Acesso ao PetHub">
+                <Brand>
+                    <Logo />
+                </Brand>
 
                 {/* AuthTabs: navegação entre login e cadastro. */}
                 <AuthTabs aria-label="Acesso à conta">

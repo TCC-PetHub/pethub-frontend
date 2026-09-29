@@ -5,19 +5,18 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight, HeartHandshake } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import Button from "@/components/common/Button";
 import { AuthTab, AuthTabs } from "@/components/common/AuthTabs";
+import Brand from "@/components/common/Brand";
 import Input from "@/components/common/Input";
+import Logo from "@/components/common/Logo";
 import { toast } from "@/components/common/Toast";
 
 import {
-  Brand,
-  BrandLogo,
-  BrandText,
   Card,
   Consent,
   Container,
@@ -103,13 +102,7 @@ function SignUpContent() {
     <Container>
       <Card>
         <Brand>
-          <BrandLogo aria-hidden="true">
-            <HeartHandshake size={24} />
-          </BrandLogo>
-          <BrandText>
-            <strong>PetHub</strong>
-            <span>Proteção animal</span>
-          </BrandText>
+          <Logo />
         </Brand>
 
         <AuthTabs aria-label="Acesso">
