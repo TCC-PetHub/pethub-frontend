@@ -232,7 +232,7 @@ export default function TopBar({
                 size="sm"
                 variant="secondary"
                 fullWidth={false}
-                onClick={() => router.push("/login?tipo=organizador")}
+                onClick={() => router.push("/login?perfil=organization")}
                 style={{
                   backgroundColor: "var(--colors-background)",
                   border: "1px solid var(--colors-primaryLight)",

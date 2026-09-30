@@ -1,4 +1,6 @@
-import { styled } from "@/styles";
+import Link from "next/link";
+
+import { keyframes, styled } from "@/styles";
 
 export const Container = styled("main", {
   position: "fixed",
@@ -161,5 +163,74 @@ export const Consent = styled("label", {
     "&:hover": {
       textDecoration: "underline",
     },
+  },
+});
+
+export const PendingBox = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  gap: "$md",
+  padding: "$md 0 $sm",
+  textAlign: "center",
+});
+
+const flip = keyframes({
+  "0%, 40%": { transform: "rotate(0deg)" },
+  "60%, 100%": { transform: "rotate(180deg)" },
+});
+
+export const PendingIcon = styled("span", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 96,
+  height: 96,
+  borderRadius: "50%",
+  backgroundColor: "$adoptedBackground",
+  color: "$primary",
+
+  svg: {
+    animation: `${flip} 2s ease-in-out infinite`,
+
+    "@media (prefers-reduced-motion: reduce)": {
+      animation: "none",
+    },
+  },
+});
+
+export const PendingTitle = styled("h2", {
+  margin: 0,
+  color: "$text",
+  fontSize: 18,
+  fontWeight: 700,
+});
+
+export const PendingText = styled("p", {
+  margin: 0,
+  maxWidth: 300,
+  color: "$textSecondary",
+  fontSize: 13,
+  lineHeight: 1.6,
+});
+
+export const BackLink = styled(Link, {
+  marginTop: "$sm",
+  padding: "10px 20px",
+  border: "1px solid $primaryLight",
+  borderRadius: "$lg",
+  color: "$primary",
+  fontSize: 13,
+  fontWeight: 600,
+  textDecoration: "none",
+  transition: "all 200ms ease",
+
+  "&:hover": {
+    backgroundColor: "$adoptedBackground",
+  },
+
+  "&:focus-visible": {
+    outline: "none",
+    boxShadow: "0 0 0 3px $colors$primaryLight",
   },
 });
