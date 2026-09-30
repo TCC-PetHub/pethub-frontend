@@ -1,6 +1,8 @@
+import { globalStyles } from "@/styles";
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
-import { globalStyles } from "@/styles";
+
+import { AuthProvider } from "@/contexts/AuthContext";
 
 globalStyles();
 
@@ -17,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
         <Toaster
           position="top-right"
           closeButton={false}

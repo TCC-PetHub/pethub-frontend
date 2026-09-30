@@ -1,0 +1,52 @@
+name: CI — Qualidade e Build
+
+on:
+  pull_request:
+    branches: [main, develop]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Verificar Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+  # Descomente quando os testes automatizados existirem
+  # test:
+  #   name: Executar testes
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #
+  #   steps:
+  #     - name: Checkout do código
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Configurar Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 24
+  #         cache: npm
+  #
+  #     - name: Instalar dependências
+  #       run: npm ci
+  #
+  #     - name: Testes
+  #       run: npm test

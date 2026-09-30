@@ -1,0 +1,64 @@
+name: Relatório de bug
+description: Informe um problema encontrado no PetHub
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por ajudar a melhorar o PetHub.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Descrição do problema
+      description: Explique claramente o que aconteceu.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Passos para reproduzir
+      description: Liste os passos necessários para encontrar o problema.
+      placeholder: |
+        1. Acesse...
+        2. Clique em...
+        3. Observe...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Comportamento esperado
+      description: O que deveria ter acontecido?
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Navegador e versão
+      placeholder: Exemplo: Chrome 129
+
+  - type: input
+    id: device
+    attributes:
+      label: Dispositivo e sistema operacional
+      placeholder: Exemplo: Windows 10 ou Android 15
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto adicional
+      description: Inclua capturas de tela, mensagens de erro ou outras informações úteis.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Verificações
+      options:
+        - label: Pesquisei as issues existentes e não encontrei um relato equivalente.
+          required: true
