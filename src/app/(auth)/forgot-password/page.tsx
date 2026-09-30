@@ -8,6 +8,8 @@ import { z } from "zod";
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { toast } from "@/components/common/Toast";
+import Logo from "@/components/common/Logo";
+import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
 
 import {
   BackLink,
@@ -22,6 +24,7 @@ import {
   Label,
   resetGlobal,
 } from "./style";
+
 
 resetGlobal();
 
@@ -64,13 +67,7 @@ export default function RecuperarSenhaPage() {
     <Container>
       <Card>
         <Brand>
-          <BrandLogo>
-            <PawPrint size={22} aria-hidden />
-          </BrandLogo>
-          <BrandText>
-            <strong>PetHub</strong>
-            <span>Proteção Animal</span>
-          </BrandText>
+          <Logo href={PUBLIC_HOME} />
         </Brand>
 
         <Description>

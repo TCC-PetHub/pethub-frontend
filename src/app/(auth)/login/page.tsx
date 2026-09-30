@@ -12,6 +12,7 @@ import Brand from "@/components/common/Brand";
 import Input from "@/components/common/Input";
 import Logo from "@/components/common/Logo";
 import { toast } from "@/components/common/Toast";
+import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
 import {
     loginSchema,
     profileLabels,
@@ -40,6 +41,7 @@ function GoogleIcon() {
 function LoginContent() {
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { login } = useAuth();
     const [loginFormErrors, setLoginFormErrors] = useState<LoginFormErrors>({});
 
     // O perfil selecionado vem da URL: /login?perfil=organization
@@ -87,7 +89,9 @@ function LoginContent() {
 
         setLoginFormErrors({});
 
-        router.push("/public-portal");
+        // Marca a sessão como autenticada antes de navegar.
+        login();
+        router.push(PUBLIC_HOME);
     }
 
     // LoginPage: contêiner principal da página.
@@ -96,7 +100,7 @@ function LoginContent() {
             {/* LoginPanel: painel que agrupa os componentes de autenticação. */}
             <section className="login-panel" aria-label="Acesso ao PetHub">
                 <Brand>
-                    <Logo />
+                    <Logo href={PUBLIC_HOME} />
                 </Brand>
 
                 {/* AuthTabs: navegação entre login e cadastro. */}

@@ -15,7 +15,7 @@ export const Container = styled("main", {
   boxSizing: "border-box",
   padding: "$md",
   fontFamily: "$sans",
-  backgroundColor: "$backgroundSecondary",
+  backgroundColor: "color-mix(in srgb, var(--colors-adoptedBackground) 35%, var(--colors-background))",
 
   "@supports (min-height: 100dvh)": {
     minHeight: "100dvh",

@@ -11,6 +11,7 @@ import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import Logo from "@/components/common/Logo";
 import TopBar from "@/components/navigation/TopBar";
+import { useAuth, useHomeHref } from "@/contexts/AuthContext";
 import {
   ANIMALS,
   CAMPAIGNS,
@@ -30,7 +31,6 @@ import {
   CardTop,
   Chip,
   Chips,
-  DevToggle,
   Footer,
   FooterBottom,
   FooterGrid,
@@ -73,9 +73,8 @@ const currency = new Intl.NumberFormat("pt-BR", {
 
 export default function HomePage() {
   const router = useRouter();
-
-  // Somente para desenvolvimento: alterna a TopBar entre deslogado e logado
-  const [loggedIn, setLoggedIn] = useState(false);
+  const homeHref = useHomeHref();
+  const { isAuthenticated, logout } = useAuth();
 
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<string[]>([]);
@@ -101,10 +100,10 @@ export default function HomePage() {
   return (
     <Page>
       <TopBar
-        variant={loggedIn ? "authenticated" : "public"}
+        variant={isAuthenticated ? "authenticated" : "public"}
         user={MOCK_ADOPTER}
         navItems={MOCK_NAV_ITEMS}
-        onLogout={() => setLoggedIn(false)}
+        onLogout={logout}
       />
 
       <main>
@@ -300,7 +299,7 @@ export default function HomePage() {
         <Inner>
           <FooterGrid>
             <div>
-              <Logo light />
+              <Logo light href={homeHref} />
               <FooterText>
                 Conectando amigos, ONGs e famílias para o caminho seguro da
                 adoção e da proteção animal em todo o território nacional.
@@ -343,13 +342,6 @@ export default function HomePage() {
           </FooterBottom>
         </Inner>
       </Footer>
-
-      {process.env.NODE_ENV === "development" && (
-        <DevToggle type="button" onClick={() => setLoggedIn((v) => !v)}>
-          Visualizar como: {loggedIn ? "logado" : "deslogado"} (clique para
-          alternar)
-        </DevToggle>
-      )}
     </Page>
   );
 }

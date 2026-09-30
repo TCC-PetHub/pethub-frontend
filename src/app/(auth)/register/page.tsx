@@ -15,6 +15,7 @@ import Brand from "@/components/common/Brand";
 import Input from "@/components/common/Input";
 import Logo from "@/components/common/Logo";
 import { toast } from "@/components/common/Toast";
+import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
 
 import {
   Card,
@@ -102,7 +103,7 @@ function SignUpContent() {
     <Container>
       <Card>
         <Brand>
-          <Logo />
+          <Logo href={PUBLIC_HOME} />
         </Brand>
 
         <AuthTabs aria-label="Acesso">
