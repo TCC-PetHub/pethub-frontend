@@ -1,0 +1,48 @@
+name: Solicitação de funcionalidade
+description: Sugira uma nova funcionalidade ou melhoria para o PetHub
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por contribuir com o PetHub. Descreva sua proposta com o máximo de clareza possível.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema ou necessidade
+      description: Qual problema esta funcionalidade resolveria?
+      placeholder: Atualmente, é difícil...
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solução proposta
+      description: Explique como você gostaria que a funcionalidade se comportasse.
+      placeholder: A aplicação poderia...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternativas consideradas
+      description: Existem outras soluções ou abordagens possíveis?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto adicional
+      description: Adicione imagens, referências ou qualquer outra informação relevante.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Verificações
+      options:
+        - label: Pesquisei as issues existentes e não encontrei uma solicitação equivalente.
+          required: true
