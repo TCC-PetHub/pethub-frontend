@@ -3,15 +3,11 @@ name: CI — Qualidade e Build
 on:
   push:
     branches: [main, develop]
-
   pull_request:
     branches: [main, develop]
 
-permissions:
-  contents: read
-
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -20,24 +16,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      
-name: Checkout do código
-      uses: actions/checkout@v4
+      - name: Checkout do código
+        uses: actions/checkout@v4
 
-      
-name: Configurar Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: npm
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
 
-      
-name: Instalar dependências
-      run: npm ci
+      - name: Instalar dependências
+        run: npm ci
 
-      
-name: Executar lint
-      run: npm run lint
+      - name: Executar lint
+        run: npm run lint
 
   build:
     name: Verificar Build
@@ -45,21 +37,39 @@ name: Executar lint
     needs: lint
 
     steps:
-      
-name: Checkout do código
-      uses: actions/checkout@v4
+      - name: Checkout do código
+        uses: actions/checkout@v4
 
-      
-name: Configurar Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-        cache: npm
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
 
-      
-name: Instalar dependências
-      run: npm ci
+      - name: Instalar dependências
+        run: npm ci
 
-      
-name: Build
-      run: npm run build
+      - name: Build
+        run: npm run build
+
+  # Descomente quando os testes automatizados existirem
+  # test:
+  #   name: Executar testes
+  #   runs-on: ubuntu-latest
+  #   needs: lint
+  #
+  #   steps:
+  #     - name: Checkout do código
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Configurar Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: 24
+  #         cache: npm
+  #
+  #     - name: Instalar dependências
+  #       run: npm ci
+  #
+  #     - name: Testes
+  #       run: npm test
