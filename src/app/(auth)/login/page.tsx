@@ -6,12 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { z } from "zod";
 
-import Button from "@/components/Button";
-import { AuthTab, AuthTabs } from "@/components/AuthTabs";
-import Brand from "@/components/Brand";
-import Input from "@/components/Input";
-import Logo from "@/components/Logo";
-import { toast } from "@/components/Toast";
+import Button from "@/components/common/Button";
+import { AuthTab, AuthTabs } from "@/components/common/AuthTabs";
+import Brand from "@/components/common/Brand";
+import Input from "@/components/common/Input";
+import Logo from "@/components/common/Logo";
+import { toast } from "@/components/common/Toast";
 import {
   AUTHENTICATED_HOME,
   PUBLIC_HOME,
@@ -24,6 +24,7 @@ import {
   type LoginField,
 } from "@/schemas/auth";
 
+import { authRoute } from "../routes";
 import { loginStyles } from "./styles";
 
 type LoginFormErrors = Partial<Record<LoginField, string>>;
@@ -62,12 +63,9 @@ function LoginContent() {
   const [submitting, setSubmitting] = useState(false);
   const [loginError, setLoginError] = useState("");
 
-  // O perfil selecionado vem da URL: /login?perfil=organization
   const currentProfile =
     searchParams.get("perfil") === "organization" ? "organization" : "adopter";
 
-  // Limpa o erro do campo ao digitar. Se não há erro, devolve o mesmo
-  // objeto e o React não re-renderiza a cada tecla.
   function handleInputChange(changeEvent: ChangeEvent<HTMLInputElement>) {
     const changedFieldName = changeEvent.target.name as LoginField;
     setLoginFormErrors((currentErrors) =>
@@ -99,7 +97,6 @@ function LoginContent() {
       };
       setLoginFormErrors(validationErrors);
 
-      // Leva o foco para o primeiro campo com erro
       const firstInvalidField = loginFieldFocusOrder.find(
         (fieldName) => validationErrors[fieldName],
       );
@@ -113,39 +110,41 @@ function LoginContent() {
 
     setSubmitting(true);
     try {
-      await login({ ...validationResult.data, remember: loginFormData.get("remember") === "on" });
+      await login({
+        ...validationResult.data,
+        remember: loginFormData.get("remember") === "on",
+      });
       router.replace(AUTHENTICATED_HOME);
       router.refresh();
     } catch (error) {
-      setLoginError(error instanceof Error ? error.message : "Não foi possível entrar. Tente novamente.");
+      setLoginError(
+        error instanceof Error
+          ? error.message
+          : "Não foi possível entrar. Tente novamente.",
+      );
     } finally {
       setSubmitting(false);
     }
   }
 
-  // LoginPage: contêiner principal da página.
   return (
     <main className={loginStyles()}>
-      {/* LoginPanel: painel que agrupa os componentes de autenticação. */}
       <section className="login-panel" aria-label="Acesso ao PetHub">
         <Brand>
           <Logo href={PUBLIC_HOME} />
         </Brand>
 
-        {/* AuthTabs: navegação entre login e cadastro. */}
         <AuthTabs aria-label="Acesso à conta">
           <AuthTab as="span" active aria-current="page">
             Entrar
           </AuthTab>
-          <AuthTab href={`/register?perfil=${currentProfile}`}>
+          <AuthTab href={authRoute.register(currentProfile)}>
             Criar conta
           </AuthTab>
         </AuthTabs>
 
-        {/* LoginForm: perfil, credenciais, preferências e envio. */}
         <form className="login-form" onSubmit={handleLoginSubmit} noValidate>
           {loginError && <p role="alert">{loginError}</p>}
-          {/* ProfilePicker: cada opção é um link com o perfil na URL. */}
           <fieldset className="profile-picker">
             <legend>Você é:</legend>
             <div className="profile-options">
@@ -153,7 +152,7 @@ function LoginContent() {
                 <Link
                   key={profileOption}
                   className="profile-option"
-                  href={`/login?perfil=${profileOption}`}
+                  href={authRoute.login(profileOption)}
                   replace
                   scroll={false}
                   aria-current={
@@ -164,11 +163,9 @@ function LoginContent() {
                 </Link>
               ))}
             </div>
-            {/* Mantém o perfil no FormData para o schema continuar igual. */}
             <input type="hidden" name="profile" value={currentProfile} />
           </fieldset>
 
-          {/* EmailField: entrada e mensagem de validação do e-mail. */}
           <div className="form-field">
             <label htmlFor="email">E-mail</label>
             <Input
@@ -182,7 +179,6 @@ function LoginContent() {
             />
           </div>
 
-          {/* PasswordField: entrada e mensagem de validação da senha. */}
           <div className="form-field">
             <label htmlFor="password">Senha</label>
             <Input
@@ -196,31 +192,26 @@ function LoginContent() {
             />
           </div>
 
-          {/* LoginFormOptions: lembrar sessão e recuperar senha. */}
           <div className="form-options">
             <label className="remember-option">
               <input type="checkbox" name="remember" />
               <span>Lembrar-me</span>
             </label>
-            <Link href="/forgot-password">Esqueci minha senha</Link>
+            <Link href={authRoute.forgotPassword()}>Esqueci minha senha</Link>
           </div>
 
-          {/* LoginSubmitButton: envio das credenciais. */}
           <Button type="submit" isLoading={submitting} loadingLabel="Entrando...">
             Entrar <ArrowRight size={16} aria-hidden="true" />
           </Button>
         </form>
 
-        {/* SocialLoginDivider: separador das opções de autenticação. */}
         <div className="divider">
           <span>ou continue com</span>
         </div>
 
-        {/* GoogleLoginButton: ação de login social com Google. */}
         <Button
           variant="secondary"
           onClick={() =>
-            // TODO: integrar login com Google
             toast.info("O acesso com Google estará disponível em breve.")
           }
         >
@@ -232,7 +223,6 @@ function LoginContent() {
   );
 }
 
-// O Next exige Suspense ao usar useSearchParams em uma página client.
 export default function LoginPage() {
   return (
     <Suspense>

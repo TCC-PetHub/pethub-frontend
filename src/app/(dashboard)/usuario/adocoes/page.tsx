@@ -2,7 +2,7 @@
 
 import { Building2, X } from "lucide-react";
 
-import TopBar from "@/components/TopBar";
+import TopBar from "@/components/layout/TopBar";
 import { useUserPortal } from "@/features/user/useUserPortal";
 
 import { CloseButton, Dialog, DialogTitle, Main, Page } from "../styles";

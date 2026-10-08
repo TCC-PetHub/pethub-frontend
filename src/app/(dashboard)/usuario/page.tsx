@@ -15,8 +15,8 @@ import {
   X,
 } from "lucide-react";
 
-import Input, { type StandardInputProps } from "@/components/Input";
-import TopBar from "@/components/TopBar";
+import Input, { type StandardInputProps } from "@/components/common/Input";
+import TopBar from "@/components/layout/TopBar";
 import { useUserPortal } from "@/features/user/useUserPortal";
 
 import {

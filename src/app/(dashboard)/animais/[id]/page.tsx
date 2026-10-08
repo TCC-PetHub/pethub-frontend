@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
-import AnimalProfile from "@/components/AnimalProfile";
-import PortalShell from "@/components/PortalShell";
+import AnimalProfile from "@/components/animais/AnimalProfile";
+import PortalShell from "@/components/layout/PortalShell";
 import { findPet } from "@/features/animals/data";
 
 import { Heading, HeadingText, HeadingTitle } from "./styles";

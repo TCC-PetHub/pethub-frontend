@@ -139,4 +139,4 @@ export const PARTNERS: Partner[] = [
 ];
 
 /** Ajuste os hrefs para as rotas reais do projeto (o item ativo depende da URL). */
-export { USER_NAV_ITEMS as MOCK_NAV_ITEMS } from "@/components/NavigationLinks/items";
+export { USER_NAV_ITEMS as MOCK_NAV_ITEMS } from "@/components/navigation/NavigationLinks/items";

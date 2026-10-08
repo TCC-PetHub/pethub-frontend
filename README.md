@@ -150,7 +150,7 @@ Os dados de campanha, animal, parceiro, usuário e menu vêm de `src/mocks/pethu
 - **`@hookform/resolvers`**: integração de Zod com React Hook Form.
 - **Stitches** (`@stitches/react`): componentes estilizados, tokens, temas e estilos globais em `src/styles`.
 - **Lucide React** (`lucide-react`): ícones de ações e estados.
-- **Sonner** (`sonner`): infraestrutura das notificações; `src/components/common/Toast.tsx` fornece a aparência e as funções `success`, `error`, `info` e `warning`.
+- **Sonner** (`sonner`): infraestrutura das notificações; `src/components/common/Toast/index.tsx` fornece a aparência e as funções `success`, `error`, `info` e `warning`.
 
 ### Desenvolvimento
 
@@ -160,16 +160,7 @@ Os dados de campanha, animal, parceiro, usuário e menu vêm de `src/mocks/pethu
 
 ## Componentes compartilhados
 
-Em `src/components/common`:
-
-- `Button.tsx`: botão com variantes, tamanhos, largura configurável e estado de carregamento.
-- `Input.tsx`: input com suporte a ícone, compactação, mensagem de erro e alternância de visibilidade da senha. `containerClassName` permite identificar semanticamente o wrapper no DOM.
-- `AuthTabs.tsx`: abas de login/cadastro.
-- `Brand.tsx` e `Logo.tsx`: marca usada nas telas.
-- `Toast.tsx`: notificações customizadas usando Sonner.
-- `UserCard.tsx`: apresentação do usuário no menu.
-
-`src/components/navigation/TopBar.tsx` contém a navegação superior, incluindo menu móvel, estado ativo da rota, menu da conta e saída da sessão mock.
+Os componentes estão organizados por responsabilidade em `src/components/layout`, `common`, `animais` e `navigation`. Cada componente mantém sua própria pasta e documentação junto da implementação. Consulte [src/components/README.md](src/components/README.md) para ver a estrutura completa.
 
 ## Verificações recomendadas
 

@@ -13,11 +13,11 @@ import {
   X,
 } from "lucide-react";
 
-import Button from "@/components/Button";
-import Input from "@/components/Input";
-import PortalShell from "@/components/PortalShell";
-import Select from "@/components/Select";
-import Textarea from "@/components/Textarea";
+import Button from "@/components/common/Button";
+import Input from "@/components/common/Input";
+import PortalShell from "@/components/layout/PortalShell";
+import Select from "@/components/common/Select";
+import Textarea from "@/components/common/Textarea";
 
 import {
   Badge,

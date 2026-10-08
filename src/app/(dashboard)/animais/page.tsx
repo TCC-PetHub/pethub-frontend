@@ -4,8 +4,8 @@ import { useState } from "react";
 
 import { Building2, CalendarDays } from "lucide-react";
 
-import PortalShell from "@/components/PortalShell";
-import Select from "@/components/Select";
+import PortalShell from "@/components/layout/PortalShell";
+import Select from "@/components/common/Select";
 import { pets } from "@/features/animals/data";
 
 import {

@@ -5,6 +5,46 @@ import { randomBytes } from "node:crypto";
 import ts from "typescript";
 import { SignJWT, decodeJwt } from "jose";
 
+const registerFilesUrl = new URL("../src/utils/Register/registerFiles.ts", import.meta.url).href;
+const registerFormattingUrl = new URL("../src/utils/Register/registerFormatting.ts", import.meta.url).href;
+const registerValidationSource = await fs.readFile(new URL("../src/utils/Register/registerValidation.ts", import.meta.url), "utf8");
+const registerValidationJs = ts.transpileModule(registerValidationSource, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
+}).outputText
+  .replace(/from ["']\.\/registerFormatting["']/g, `from ${JSON.stringify(registerFormattingUrl)}`);
+const registerValidationModule = `data:text/javascript;base64,${Buffer.from(registerValidationJs).toString("base64")}`;
+const registerFormattingSource = await fs.readFile(new URL("../src/utils/Register/registerFormatting.ts", import.meta.url), "utf8");
+const registerFormattingJs = ts.transpileModule(registerFormattingSource, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
+}).outputText;
+const { formatCpf, formatCnpj, formatPhone, formatState } = await import(`data:text/javascript;base64,${Buffer.from(registerFormattingJs).toString("base64")}`);
+const registerSchemasSource = await fs.readFile(new URL("../src/utils/Register/registerSchemas.ts", import.meta.url), "utf8");
+const registerSchemasJs = ts.transpileModule(registerSchemasSource, {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
+}).outputText
+  .replace(/from ["']zod["']/g, `from ${JSON.stringify(import.meta.resolve("zod"))}`)
+  .replace(/from ["']\.\/registerFiles["']/g, `from ${JSON.stringify(registerFilesUrl)}`)
+  .replace(/from ["']\.\/registerValidation["']/g, `from ${JSON.stringify(registerValidationModule)}`);
+const { userRegisterSchema, organizationRegisterSchema } = await import(`data:text/javascript;base64,${Buffer.from(registerSchemasJs).toString("base64")}`);
+
+class MockFileList extends Array {
+  item(index) {
+    return this[index] ?? null;
+  }
+}
+
+globalThis.FileList = MockFileList;
+const files = (...entries) => new MockFileList(...entries);
+const pdf = new File(["documento"], "documento.pdf", { type: "application/pdf" });
+
+test("formatadores aplicam máscaras aos campos durante a digitação", () => {
+  assert.equal(formatCpf("52998224725"), "529.982.247-25");
+  assert.equal(formatCnpj("12abc34501de35"), "12.ABC.345/01DE-35");
+  assert.equal(formatPhone("11987654321"), "(11) 98765-4321");
+  assert.equal(formatPhone("1132345678"), "(11) 3234-5678");
+  assert.equal(formatState("m-g"), "MG");
+});
+
 // Exercise the real token module with Node, without Next's build-time marker.
 const source = await fs.readFile(new URL("../src/lib/auth/token.ts", import.meta.url), "utf8");
 const js = ts.transpileModule(source.replace('import "server-only";', ""), {
@@ -59,4 +99,180 @@ test("chave errada, ausente ou fraca não autentica", async () => {
     }
     await assert.rejects(signSession(user));
   } finally { process.env.AUTH_JWS_SECRET = original; }
+});
+
+const validUserRegistration = {
+  name: "Ana da Silva",
+  cpf: "529.982.247-25",
+  email: "ana@example.com",
+  phone: "(11) 98765-4321",
+  city: "São Paulo",
+  state: "sp",
+  password: "senha-segura",
+  identityDocuments: files(pdf),
+  acceptedTerms: true,
+};
+
+const validOrganizationRegistration = {
+  organizationName: "Instituto Patas",
+  cnpj: "11.222.333/0001-81",
+  institutionalEmail: "contato@example.org",
+  phone: "(11) 3234-5678",
+  city: "São Paulo",
+  state: "SP",
+  responsibleName: "Maria Silva",
+  responsibleCpf: "529.982.247-25",
+  responsibleEmail: "maria@example.org",
+  accessEmail: "acesso@example.org",
+  password: "senha-segura",
+  cnpjDocument: files(pdf),
+  statuteDocument: files(pdf),
+  shelterDocument: undefined,
+  acceptedTerms: true,
+};
+
+function assertFieldRejected(schema, registration, field, value) {
+  const result = schema.safeParse({ ...registration, [field]: value });
+  assert.equal(result.success, false, `${field} deveria ser rejeitado`);
+  assert(
+    result.error.issues.some((issue) => issue.path[0] === field),
+    `a falha deveria apontar para ${field}`,
+  );
+}
+
+test("schema do cadastro individual aceita dados válidos e rejeita cada campo inválido", () => {
+  assert.equal(userRegisterSchema.safeParse(validUserRegistration).success, true);
+
+  for (const [field, value] of [
+    ["name", "   "],
+    ["cpf", "111111111111111111"],
+    ["email", "email-invalido"],
+    ["phone", "0012345678"],
+    ["city", "   "],
+    ["state", "ZZ"],
+    ["password", "        "],
+    ["identityDocuments", files()],
+    ["acceptedTerms", false],
+  ]) {
+    assertFieldRejected(userRegisterSchema, validUserRegistration, field, value);
+  }
+
+  assertFieldRejected(
+    userRegisterSchema,
+    validUserRegistration,
+    "identityDocuments",
+    files(new File(["conteúdo"], "documento.txt", { type: "text/plain" })),
+  );
+  assertFieldRejected(
+    userRegisterSchema,
+    validUserRegistration,
+    "identityDocuments",
+    files(new File([new Uint8Array(10 * 1024 * 1024 + 1)], "grande.pdf", { type: "application/pdf" })),
+  );
+});
+
+test("schema do cadastro de organização aceita dados válidos e rejeita cada campo inválido", () => {
+  assert.equal(organizationRegisterSchema.safeParse(validOrganizationRegistration).success, true);
+
+  for (const [field, value] of [
+    ["organizationName", "   "],
+    ["cnpj", "1231312321312312312"],
+    ["institutionalEmail", "email-invalido"],
+    ["phone", "0012345678"],
+    ["city", "   "],
+    ["state", "ZZ"],
+    ["responsibleName", "   "],
+    ["responsibleCpf", "111111111111111111"],
+    ["responsibleEmail", "email-invalido"],
+    ["accessEmail", "email-invalido"],
+    ["password", "        "],
+    ["cnpjDocument", files()],
+    ["statuteDocument", files()],
+    ["acceptedTerms", false],
+  ]) {
+    assertFieldRejected(organizationRegisterSchema, validOrganizationRegistration, field, value);
+  }
+
+  assert.equal(
+    organizationRegisterSchema.safeParse({
+      ...validOrganizationRegistration,
+      cnpj: "12.ABC.345/01DE-35",
+    }).success,
+    true,
+  );
+  assert.equal(
+    organizationRegisterSchema.safeParse({
+      ...validOrganizationRegistration,
+      shelterDocument: undefined,
+    }).success,
+    true,
+  );
+  assertFieldRejected(
+    organizationRegisterSchema,
+    validOrganizationRegistration,
+    "shelterDocument",
+    files(pdf, pdf),
+  );
+  assertFieldRejected(
+    organizationRegisterSchema,
+    validOrganizationRegistration,
+    "cnpjDocument",
+    files(new File(["conteúdo"], "comprovante.txt", { type: "text/plain" })),
+  );
+});
+
+test("documentos rejeitam caracteres não permitidos e aceitam CNPJ alfanumérico válido", () => {
+  assertFieldRejected(
+    userRegisterSchema,
+    validUserRegistration,
+    "cpf",
+    "529.982.247-25abc",
+  );
+  assertFieldRejected(
+    organizationRegisterSchema,
+    validOrganizationRegistration,
+    "cnpj",
+    "11.222.333/0001-81abc",
+  );
+  assert.equal(
+    organizationRegisterSchema.safeParse({
+      ...validOrganizationRegistration,
+      cnpj: "12.ABC.345/01DE-35",
+    }).success,
+    true,
+  );
+});
+
+test("erros de CPF e CNPJ aparecem junto com erros de outros campos", () => {
+  const userResult = userRegisterSchema.safeParse({
+    ...validUserRegistration,
+    name: "",
+    cpf: "111111111111111111",
+    email: "email-invalido",
+    phone: "0012345678",
+    city: "",
+    state: "ZZ",
+    password: "curta",
+    identityDocuments: files(),
+    acceptedTerms: false,
+  });
+  assert.equal(userResult.success, false);
+  assert(userResult.error.issues.some((issue) => issue.path[0] === "name"));
+  assert(userResult.error.issues.some((issue) => issue.path[0] === "cpf"));
+
+  const organizationResult = organizationRegisterSchema.safeParse({
+    ...validOrganizationRegistration,
+    organizationName: "",
+    cnpj: "1231312321312312312",
+    institutionalEmail: "email-invalido",
+    phone: "0012345678",
+    city: "",
+    state: "ZZ",
+    responsibleName: "",
+    responsibleCpf: "111111111111111111",
+  });
+  assert.equal(organizationResult.success, false);
+  assert(organizationResult.error.issues.some((issue) => issue.path[0] === "cnpj"));
+  assert(organizationResult.error.issues.some((issue) => issue.path[0] === "responsibleCpf"));
+  assert(organizationResult.error.issues.some((issue) => issue.path[0] === "organizationName"));
 });
