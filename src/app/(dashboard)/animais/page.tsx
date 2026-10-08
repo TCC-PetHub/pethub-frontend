@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Building2, CalendarDays } from "lucide-react";
 import PortalShell from "@/components/PortalShell";
-import s from "@/app/(auth)/animais/styles";
+import s from "./styles";
 import { pets } from "@/features/animals/data";
 export default function AnimalsPage() {
   const [filters, setFilters] = useState<Record<string, string>>({});

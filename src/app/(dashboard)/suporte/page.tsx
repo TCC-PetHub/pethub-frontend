@@ -15,7 +15,7 @@ import {
   X,
 } from "lucide-react";
 import PortalShell from "@/components/PortalShell";
-import s from "@/app/(auth)/suporte/styles";
+import s from "./styles";
 type Ticket = {
   id: string;
   subject: string;
@@ -89,7 +89,7 @@ export default function SupportPage() {
           localStorage.getItem("pethub:support") || "null",
         );
         if (Array.isArray(saved)) setTickets(saved);
-      } catch { }
+      } catch {}
     }, 0);
     return () => clearTimeout(timer);
   }, []);
