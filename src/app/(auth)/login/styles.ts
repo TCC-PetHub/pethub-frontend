@@ -1,6 +1,6 @@
 import { css } from "@/styles";
 
-const ring = "0 0 0 3px $colors$primaryLight";
+const ring = "var(--shadows-focus)";
 
 export const loginStyles = css({
   minHeight: "100vh",
@@ -39,7 +39,7 @@ export const loginStyles = css({
     height: "36px",
     borderRadius: "$md",
     backgroundColor: "$primary",
-    color: "#fff",
+    color: "var(--colors-background)",
   },
   ".brand-copy": {
     display: "flex",
@@ -48,7 +48,7 @@ export const loginStyles = css({
     strong: { fontSize: "$lg", fontWeight: 700, color: "$primary" },
     span: {
       marginTop: "2px",
-      fontSize: "10px",
+      fontSize: "var(--fontSizes-size10)",
       fontWeight: 600,
       letterSpacing: "0.14em",
       color: "$primary",
@@ -65,7 +65,7 @@ export const loginStyles = css({
     display: "flex",
     flexDirection: "column",
     gap: "6px",
-    label: { fontSize: "13px", fontWeight: 600 },
+    label: { fontSize: "var(--fontSizes-size13)", fontWeight: 600 },
   },
 
   /* Seletor de perfil (links com o perfil na URL) */
@@ -77,7 +77,7 @@ export const loginStyles = css({
     legend: {
       padding: 0,
       marginBottom: "6px",
-      fontSize: "13px",
+      fontSize: "var(--fontSizes-size13)",
       fontWeight: 600,
     },
   },
@@ -90,7 +90,7 @@ export const loginStyles = css({
     display: "block",
     padding: "10px $sm",
     textAlign: "center",
-    fontSize: "13px",
+    fontSize: "var(--fontSizes-size13)",
     fontWeight: 500,
     color: "$textSecondary",
     backgroundColor: "$background",
@@ -98,12 +98,12 @@ export const loginStyles = css({
     borderRadius: "$lg",
     transition: "border-color 200ms ease, background-color 200ms ease",
     textDecoration: "none",
-    "&:hover": { 
-        borderColor: "$primaryLight"
+    "&:hover": {
+      borderColor: "$primaryLight",
     },
-    "&:focus-visible": { 
-        outline: "none", 
-        boxShadow: ring 
+    "&:focus-visible": {
+      outline: "none",
+      boxShadow: ring,
     },
     "&[aria-current='true']": {
       backgroundColor: "$adoptedBackground",
@@ -119,7 +119,7 @@ export const loginStyles = css({
     alignItems: "center",
     justifyContent: "space-between",
     gap: "$sm",
-    fontSize: "11px",
+    fontSize: "var(--fontSizes-size11)",
     a: {
       fontWeight: 600,
       color: "$primary",
@@ -141,7 +141,7 @@ export const loginStyles = css({
     alignItems: "center",
     gap: "$md",
     margin: "$md 0",
-    fontSize: "11px",
+    fontSize: "var(--fontSizes-size11)",
     color: "$textMuted",
     "&::before, &::after": {
       content: '""',
