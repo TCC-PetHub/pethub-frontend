@@ -8,6 +8,7 @@ interface CommonInputProps {
   error?: string;
   variant?: "default" | "compact";
   icon?: ReactNode;
+  containerClassName?: string;
   fileLabel?: string;
   fileHint?: string;
 }
@@ -35,6 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       style,
       variant = "default",
       icon,
+      containerClassName = "",
       fileLabel = "Selecionar arquivo",
       fileHint,
       onChange,
@@ -67,10 +69,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
     return (
-      <div className="input-container">
-        <div className={`input-wrapper ${isFile ? "file-wrapper" : ""} ${isFile && error ? "file-error" : ""} ${props.disabled ? "is-disabled" : ""}`}>
+      <div className={`input-container pethub-input-container ${containerClassName}`}>
+        <div className={`input-wrapper pethub-input-control ${isFile ? "file-wrapper" : ""} ${isFile && error ? "file-error" : ""} ${props.disabled ? "is-disabled" : ""}`}>
           {!isFile && icon && (
-            <span className="input-icon" aria-hidden="true">
+            <span className="input-icon pethub-input-icon" aria-hidden="true">
               {icon}
             </span>
           )}
@@ -85,11 +87,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             type={inputType}
             suppressHydrationWarning
             className={`
-              input-field
+              input-field pethub-input
               ${variant === "compact" ? "input-compact" : ""}
+              ${variant === "compact" ? "pethub-input--compact" : ""}
               ${icon ? "input-with-icon" : ""}
+              ${icon ? "pethub-input--with-icon" : ""}
               ${isPassword ? "input-with-password" : ""}
+              ${isPassword ? "pethub-input--with-password" : ""}
               ${error ? "input-error" : ""}
+              ${error ? "pethub-input--error" : ""}
               ${isFile ? "file-native" : ""}
               ${className}
             `}
@@ -118,7 +124,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
               aria-pressed={showPassword}
               suppressHydrationWarning
-              className="password-toggle"
+              className="password-toggle pethub-input-password-toggle"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -127,17 +133,19 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 
         {isFile && fileHint && <p id={hintId} className="file-hint">{fileHint}</p>}
         {error && (
-          <p id={errorId} className="input-error-message" role="alert">
+          <p id={errorId} className="input-error-message pethub-input-error-message" role="alert">
             {error}
           </p>
         )}
 
         <style jsx>{`
-          .input-container {
+          .input-container,
+          .pethub-input-container {
             width: 100%;
           }
 
-          .input-wrapper {
+          .input-wrapper,
+          .pethub-input-control {
             position: relative;
             width: 100%;
           }
@@ -153,7 +161,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           }
           .file-wrapper.file-error { border-color: var(--colors-negative); }
           .file-wrapper.is-disabled { opacity: 0.5; }
-          .input-field.file-native {
+          .input-field.file-native,
+          .pethub-input.file-native {
             position: absolute;
             inset: 0;
             width: 100%;
@@ -162,13 +171,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             z-index: 1;
             cursor: pointer;
           }
-          .input-field.file-native:disabled { cursor: not-allowed; }
+          .input-field.file-native:disabled,
+          .pethub-input.file-native:disabled { cursor: not-allowed; }
           .file-content { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px; }
           .file-button { display: inline-flex; align-items: center; gap: 8px; color: var(--colors-primaryLight); font-size: var(--fontSizes-sm); }
           .file-names { color: var(--colors-textMuted); font-size: var(--fontSizes-xs); overflow-wrap: anywhere; }
           .file-hint { margin: 6px 0 0; color: var(--colors-textMuted); font-size: var(--fontSizes-xs); }
 
-          .input-field {
+          .input-field,
+          .pethub-input {
             display: block;
             width: 100%;
             box-sizing: border-box;
@@ -187,44 +198,53 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               background-color 200ms ease;
           }
 
-          .input-field::placeholder {
+          .input-field::placeholder,
+          .pethub-input::placeholder {
             color: var(--colors-textMuted);
             opacity: 1;
           }
 
-          .input-field:focus {
+          .input-field:focus,
+          .pethub-input:focus {
             border-color: var(--colors-primaryLight);
             box-shadow: var(--shadows-focusSoft);
           }
 
-          .input-field:disabled {
+          .input-field:disabled,
+          .pethub-input:disabled {
             cursor: not-allowed;
             opacity: 0.5;
           }
 
-          .input-field.input-compact {
+          .input-field.input-compact,
+          .pethub-input.pethub-input--compact {
             padding-top: 8px;
             padding-bottom: 8px;
           }
 
-          .input-field.input-with-icon {
+          .input-field.input-with-icon,
+          .pethub-input.pethub-input--with-icon {
             padding-left: 40px;
           }
 
-          .input-field.input-with-password {
+          .input-field.input-with-password,
+          .pethub-input.pethub-input--with-password {
             padding-right: 48px;
           }
 
-          .input-field.input-error {
+          .input-field.input-error,
+          .pethub-input.pethub-input--error {
             border-color: var(--colors-negative);
           }
 
-          .input-field.input-error:focus {
+          .input-field.input-error:focus,
+          .pethub-input.pethub-input--error:focus {
             border-color: var(--colors-negative);
             box-shadow: var(--shadows-focusNegative);
           }
 
-          .input-icon {
+          .input-icon,
+          .pethub-input-icon {
             position: absolute;
             left: 12px;
             top: 50%;
@@ -236,7 +256,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             pointer-events: none;
           }
 
-          .password-toggle {
+          .password-toggle,
+          .pethub-input-password-toggle {
             position: absolute;
             top: 0;
             right: 0;
@@ -252,17 +273,20 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             transition: color 200ms ease;
           }
 
-          .password-toggle:hover {
+          .password-toggle:hover,
+          .pethub-input-password-toggle:hover {
             color: var(--colors-text);
           }
 
-          .password-toggle:focus-visible {
+          .password-toggle:focus-visible,
+          .pethub-input-password-toggle:focus-visible {
             outline: 2px solid var(--colors-primaryLight);
             outline-offset: -4px;
             border-radius: var(--radii-md);
           }
 
-          .input-error-message {
+          .input-error-message,
+          .pethub-input-error-message {
             margin-top: 6px;
             color: var(--colors-negative);
             font-size: var(--fontSizes-xs);
@@ -270,7 +294,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           }
 
           @media (min-width: 640px) {
-            .input-error-message {
+            .input-error-message,
+            .pethub-input-error-message {
               font-size: var(--fontSizes-sm);
             }
           }
