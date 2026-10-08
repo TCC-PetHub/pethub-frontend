@@ -1,5 +1,4 @@
 "use client";
-
 import {
   createContext,
   useContext,
@@ -7,70 +6,88 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { homeByRole } from "@/config/navigation";
+import type { LoginCredentials, SessionUser } from "@/lib/auth/types";
 
-// Destinos da logo. Hoje os dois apontam para o mesmo lugar (o item "Início"
-// do MOCK_NAV_ITEMS é /public-portal); se a área logada ganhar rota própria,
-// basta trocar AUTHENTICATED_HOME.
 export const PUBLIC_HOME = "/public-portal";
-export const AUTHENTICATED_HOME = "/public-portal";
-
-const STORAGE_KEY = "pethub:authenticated";
 
 interface AuthContextValue {
+  user: SessionUser | null;
   isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
+  login: (credentials: LoginCredentials) => Promise<SessionUser>;
+  logout: () => Promise<void>;
 }
-
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  // Restaura a sessão mock depois da hidratação (evita mismatch com o SSR).
+export function AuthProvider({
+  children,
+  initialUser = null,
+}: {
+  children: ReactNode;
+  initialUser?: SessionUser | null;
+}) {
+  const [user, setUser] = useState(initialUser);
   useEffect(() => {
     try {
-      if (localStorage.getItem(STORAGE_KEY) === "true") {
-        setIsAuthenticated(true);
+      localStorage.removeItem("pethub:authenticated");
+    } catch {}
+    const controller = new AbortController();
+    async function syncSession() {
+      try {
+        const response = await fetch("/api/auth/session", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (response.ok || response.status === 401) {
+          const data = await response.json();
+          setUser(data.user ?? null);
+        }
+      } catch {
+        /* A network failure does not replace a verified server session. */
       }
-    } catch {
-      // localStorage indisponível: segue deslogado.
     }
+    const timer = window.setInterval(syncSession, 60_000);
+    window.addEventListener("focus", syncSession);
+    return () => {
+      controller.abort();
+      window.clearInterval(timer);
+      window.removeEventListener("focus", syncSession);
+    };
   }, []);
 
-  function persist(value: boolean) {
-    setIsAuthenticated(value);
-    try {
-      if (value) localStorage.setItem(STORAGE_KEY, "true");
-      else localStorage.removeItem(STORAGE_KEY);
-    } catch {
-      // ignora falha de storage
-    }
+  async function login(credentials: LoginCredentials) {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(credentials),
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error ?? "Não foi possível entrar.");
+    setUser(data.user);
+    return data.user as SessionUser;
   }
-
+  async function logout() {
+    const response = await fetch("/api/auth/logout", { method: "POST" });
+    if (!response.ok)
+      throw new Error("Não foi possível encerrar a sessão. Tente novamente.");
+    setUser(null);
+  }
   return (
     <AuthContext.Provider
-      value={{
-        isAuthenticated,
-        login: () => persist(true),
-        logout: () => persist(false),
-      }}
+      value={{ user, isAuthenticated: user !== null, login, logout }}
     >
       {children}
     </AuthContext.Provider>
   );
 }
-
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (!context)
     throw new Error("useAuth deve ser usado dentro de <AuthProvider>");
-  }
   return context;
 }
-
-// Destino do clique na logo, conforme o usuário esteja logado ou não.
 export function useHomeHref() {
-  const { isAuthenticated } = useAuth();
-  return isAuthenticated ? AUTHENTICATED_HOME : PUBLIC_HOME;
+  const { user, isAuthenticated } = useAuth();
+  if (!isAuthenticated) return PUBLIC_HOME;
+  return homeByRole[user?.role ?? "adopter"];
 }
