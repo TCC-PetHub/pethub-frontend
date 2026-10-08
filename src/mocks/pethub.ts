@@ -81,12 +81,54 @@ export const CAMPAIGNS: Campaign[] = [
 ];
 
 export const ANIMALS: Animal[] = [
-  { id: "pipoca", name: "Pipoca", breed: "SRD (Sem Raça Definida)", city: "São Paulo - SP", age: "Filhote", sex: "Macho" },
-  { id: "luna", name: "Luna", breed: "Gato Siamês", city: "Rio de Janeiro - RJ", age: "Adulto", sex: "Fêmea" },
-  { id: "thor", name: "Thor", breed: "Pastor Alemão", city: "Brasília - DF", age: "Jovem", sex: "Macho" },
-  { id: "mel", name: "Mel", breed: "Golden Retriever", city: "Belo Horizonte - MG", age: "Adulto", sex: "Fêmea" },
-  { id: "bolinha", name: "Bolinha", breed: "Poodle", city: "Salvador - BA", age: "Idoso", sex: "Macho" },
-  { id: "amora", name: "Amora", breed: "SRD (Sem Raça Definida)", city: "Curitiba - PR", age: "Jovem", sex: "Fêmea" },
+  {
+    id: "pipoca",
+    name: "Pipoca",
+    breed: "SRD (Sem Raça Definida)",
+    city: "São Paulo - SP",
+    age: "Filhote",
+    sex: "Macho",
+  },
+  {
+    id: "luna",
+    name: "Luna",
+    breed: "Persa",
+    city: "Rio de Janeiro - RJ",
+    age: "Adulto",
+    sex: "Fêmea",
+  },
+  {
+    id: "thor",
+    name: "Thor",
+    breed: "Labrador",
+    city: "Brasília - DF",
+    age: "Jovem",
+    sex: "Macho",
+  },
+  {
+    id: "mel",
+    name: "Mel",
+    breed: "Golden Retriever",
+    city: "Belo Horizonte - MG",
+    age: "Adulto",
+    sex: "Fêmea",
+  },
+  {
+    id: "bolinha",
+    name: "Bolinha",
+    breed: "Beagle",
+    city: "Salvador - BA",
+    age: "Idoso",
+    sex: "Macho",
+  },
+  {
+    id: "floquinho",
+    name: "Floquinho",
+    breed: "Siamês",
+    city: "São Paulo - SP",
+    age: "Adulto",
+    sex: "Macho",
+  },
 ];
 
 export const PARTNERS: Partner[] = [
@@ -94,13 +136,4 @@ export const PARTNERS: Partner[] = [
   { id: "proanima", name: "Instituto ProAnima", animals: 32 },
   { id: "sos-vida-animal", name: "SOS Vida Animal", animals: 28 },
   { id: "abrigo-sao-francisco", name: "Abrigo São Francisco", animals: 19 },
-];
-
-/** Ajuste os hrefs para as rotas reais do projeto (o item ativo depende da URL). */
-export const MOCK_NAV_ITEMS = [
-  { label: "Início", href: "/public-portal", exact: true },
-  { label: "Animais", href: "/animais" },
-  { label: "Doações", href: "/doacoes" },
-  { label: "Mensagens", href: "/mensagens" },
-  { label: "Mapa", href: "/mapa" },
 ];
