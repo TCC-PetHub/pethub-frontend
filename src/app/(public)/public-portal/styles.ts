@@ -7,6 +7,7 @@ export const Page = styled("div", {
   fontFamily: "$sans",
   color: "$text",
   backgroundColor: "$background",
+  overflowX: "clip",
 });
 
 export const Inner = styled("div", {
@@ -377,6 +378,8 @@ export const PartnerFooter = styled("div", {
 /* ---------- Footer ---------- */
 
 export const Footer = styled("footer", {
+  width: "100vw",
+  marginLeft: "calc(50% - 50vw)",
   padding: "$2xl 0 $lg",
   backgroundColor: "$text",
   color: "var(--colors-textSubtle)",

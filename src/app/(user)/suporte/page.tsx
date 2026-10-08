@@ -15,7 +15,6 @@ import {
 
 import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
-import PortalShell from "@/components/layout/PortalShell";
 import Select from "@/components/common/Select";
 import Textarea from "@/components/common/Textarea";
 
@@ -196,7 +195,7 @@ export default function SupportPage() {
   );
 
   return (
-    <PortalShell>
+    <>
       <Heading>
         <div>
           <HeadingTitle>Suporte</HeadingTitle>
@@ -435,6 +434,6 @@ export default function SupportPage() {
           </>
         )}
       </Modal>
-    </PortalShell>
+    </>
   );
 }

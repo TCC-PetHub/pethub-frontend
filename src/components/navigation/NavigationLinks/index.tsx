@@ -1,11 +1,11 @@
 "use client";
+
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSyncExternalStore } from "react";
-import {
-  getActiveNavigationHref,
-  USER_NAV_ITEMS,
-} from "@/components/navigation/NavigationLinks/items";
+
+import type { NavigationItem } from "@/config/navigation";
+
 function subscribeHash(callback: () => void) {
   window.addEventListener("hashchange", callback);
   window.addEventListener("popstate", callback);
@@ -14,13 +14,45 @@ function subscribeHash(callback: () => void) {
     window.removeEventListener("popstate", callback);
   };
 }
-export default function NavigationLinks({
-  orientation = "horizontal",
-  onNavigate,
-}: {
+
+function getActiveNavigationHref(
+  items: NavigationItem[],
+  pathname: string,
+  hash: string,
+  sectionName?: string | null,
+) {
+  const section = items.find(
+    (item) =>
+      pathname === "/public-portal" &&
+      !!item.section &&
+      item.section === (sectionName || hash.replace(/^#/, "")),
+  );
+  if (section) return section.href;
+
+  return items
+    .filter(
+      (item) =>
+        !item.href.includes("#") &&
+        (item.paths || [item.href]).some(
+          (route) =>
+            pathname === route ||
+            (!item.exact && pathname.startsWith(`${route}/`)),
+        ),
+    )
+    .sort((a, b) => b.href.length - a.href.length)[0]?.href;
+}
+
+interface NavigationLinksProps {
+  items: NavigationItem[];
   orientation?: "horizontal" | "vertical";
   onNavigate?: () => void;
-}) {
+}
+
+export default function NavigationLinks({
+  items,
+  orientation = "horizontal",
+  onNavigate,
+}: NavigationLinksProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const hash = useSyncExternalStore(
@@ -28,12 +60,14 @@ export default function NavigationLinks({
     () => window.location.hash,
     () => "",
   );
-  // A query chega no HTML inicial; o fragmento só fica disponível no navegador.
+
   const activeHref = getActiveNavigationHref(
+    items,
     pathname,
     hash,
     searchParams.get("secao"),
   );
+
   return (
     <nav
       aria-label={
@@ -41,20 +75,18 @@ export default function NavigationLinks({
       }
     >
       <ul className={`nav-list nav-${orientation}`}>
-        {USER_NAV_ITEMS.map((item) => {
-          return (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                aria-current={item.href === activeHref ? "page" : undefined}
-                className={`nav-link ${item.href === activeHref ? "nav-link-active" : ""}`}
-                onClick={onNavigate}
-              >
-                {item.label}
-              </Link>
-            </li>
-          );
-        })}
+        {items.map((item) => (
+          <li key={item.href}>
+            <Link
+              href={item.href}
+              aria-current={item.href === activeHref ? "page" : undefined}
+              className={`nav-link ${item.href === activeHref ? "nav-link-active" : ""}`}
+              onClick={onNavigate}
+            >
+              {item.label}
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   );

@@ -6,15 +6,15 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { homeByRole } from "@/config/navigation";
 import type { LoginCredentials, SessionUser } from "@/lib/auth/types";
 
 export const PUBLIC_HOME = "/public-portal";
-export const AUTHENTICATED_HOME = "/usuario";
 
 interface AuthContextValue {
   user: SessionUser | null;
   isAuthenticated: boolean;
-  login: (credentials: LoginCredentials) => Promise<void>;
+  login: (credentials: LoginCredentials) => Promise<SessionUser>;
   logout: () => Promise<void>;
 }
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -64,6 +64,7 @@ export function AuthProvider({
     const data = await response.json();
     if (!response.ok) throw new Error(data.error ?? "Não foi possível entrar.");
     setUser(data.user);
+    return data.user as SessionUser;
   }
   async function logout() {
     const response = await fetch("/api/auth/logout", { method: "POST" });
@@ -86,5 +87,7 @@ export function useAuth() {
   return context;
 }
 export function useHomeHref() {
-  return useAuth().isAuthenticated ? AUTHENTICATED_HOME : PUBLIC_HOME;
+  const { user, isAuthenticated } = useAuth();
+  if (!isAuthenticated) return PUBLIC_HOME;
+  return homeByRole[user?.role ?? "adopter"];
 }

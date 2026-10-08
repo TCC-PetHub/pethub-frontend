@@ -1,5 +1,6 @@
-import Link from "next/link";
 import { PawPrint } from "lucide-react";
+
+import { LogoLink, Mark, Text, Wrapper } from "./styles";
 
 interface LogoProps {
   /** Versão para fundos escuros (footer). */
@@ -9,89 +10,25 @@ interface LogoProps {
   href?: string;
 }
 
-export default function Logo({
-  light = false,
-  className = "",
-  href,
-}: LogoProps) {
+export default function Logo({ light = false, className, href }: LogoProps) {
   const logo = (
-    <div className={`logo ${light ? "logo-light" : ""} ${className}`}>
-      <span className="logo-mark">
+    <Wrapper className={className}>
+      <Mark>
         <PawPrint size={22} aria-hidden />
-      </span>
+      </Mark>
 
-      <span className="logo-text">
+      <Text light={light}>
         <strong>PetHub</strong>
         <small>Proteção Animal</small>
-      </span>
-
-      <style jsx>{`
-        .logo {
-          display: inline-flex;
-          flex-direction: row;
-          align-items: center;
-          gap: 10px;
-          font-family: var(--fonts-sans);
-          user-select: none;
-        }
-
-        .logo-mark {
-          display: flex;
-          flex-shrink: 0;
-          align-items: center;
-          justify-content: center;
-          width: 40px;
-          height: 40px;
-          border-radius: var(--radii-lg);
-          background-color: var(--colors-primaryLight);
-          color: var(--colors-background);
-        }
-
-        .logo-text {
-          display: flex;
-          flex-direction: column;
-          line-height: 1.2;
-        }
-
-        .logo-text strong {
-          color: var(--colors-primaryLight);
-          font-size: var(--fontSizes-lg);
-          font-weight: 700;
-        }
-
-        .logo-text small {
-          color: var(--colors-textMuted);
-          font-size: var(--fontSizes-size10);
-          font-weight: 500;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-        }
-
-        .logo-light .logo-text strong {
-          color: var(--colors-background);
-        }
-
-        .logo-light .logo-text small {
-          color: var(--colors-textSubtle);
-        }
-      `}</style>
-    </div>
+      </Text>
+    </Wrapper>
   );
 
   if (!href) return logo;
 
-  // O estilo do link fica inline porque o styled-jsx não alcança o <Link>.
   return (
-    <Link
-      href={href}
-      aria-label="PetHub, ir para a página inicial"
-      style={{
-        display: "inline-flex",
-        textDecoration: "none",
-        color: "inherit",
-      }}
-    >
+    <LogoLink href={href} aria-label="PetHub, ir para a página inicial">
       {logo}
-    </Link>
+    </LogoLink>
   );
 }

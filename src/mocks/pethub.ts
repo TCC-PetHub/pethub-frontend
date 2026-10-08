@@ -137,6 +137,3 @@ export const PARTNERS: Partner[] = [
   { id: "sos-vida-animal", name: "SOS Vida Animal", animals: 28 },
   { id: "abrigo-sao-francisco", name: "Abrigo São Francisco", animals: 19 },
 ];
-
-/** Ajuste os hrefs para as rotas reais do projeto (o item ativo depende da URL). */
-export { USER_NAV_ITEMS as MOCK_NAV_ITEMS } from "@/components/navigation/NavigationLinks/items";

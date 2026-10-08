@@ -1,20 +1,23 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, User, X } from "lucide-react";
 
 import Button from "@/components/common/Button";
 import Logo from "@/components/common/Logo";
-import NavigationLinks from "@/components/navigation/NavigationLinks";
 import { toast } from "@/components/common/Toast";
 import UserCard from "@/components/common/UserCard";
+import NavigationLinks from "@/components/navigation/NavigationLinks";
 import {
-  AUTHENTICATED_HOME,
-  PUBLIC_HOME,
-  useAuth,
-} from "@/contexts/AuthContext";
+  homeByRole,
+  navigationByRole,
+  profileByRole,
+  roleLabel,
+} from "@/config/navigation";
+import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
 
 import {
   Actions,
@@ -65,6 +68,10 @@ export default function TopBar() {
     // perfil inválido no localStorage: mantém o nome da sessão
   }
 
+  const role = user?.role ?? "adopter";
+  const items = navigationByRole[role] ?? navigationByRole.adopter;
+  const profileHref = profileByRole[role] ?? profileByRole.adopter;
+
   const accountRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -92,6 +99,10 @@ export default function TopBar() {
       document.removeEventListener("pointerdown", closeAccount);
     };
   }, [accountOpen, menuOpen]);
+
+  // A ONG usa a sidebar (OrganizationShell), não a barra superior.
+  // Fica depois de todos os hooks para não quebrar a ordem deles.
+  if (authenticated && role === "organization") return null;
 
   async function handleLogout() {
     setAccountOpen(false);
@@ -125,12 +136,12 @@ export default function TopBar() {
               )}
             </MenuToggle>
           )}
-          <Logo href={authenticated ? AUTHENTICATED_HOME : PUBLIC_HOME} />
+          <Logo href={authenticated ? homeByRole[role] : PUBLIC_HOME} />
         </Left>
 
         {authenticated && (
           <Nav>
-            <NavigationLinks />
+            <NavigationLinks items={items} />
           </Nav>
         )}
 
@@ -140,9 +151,7 @@ export default function TopBar() {
               <UserCard
                 variant="compact"
                 name={name}
-                role={
-                  user?.role === "organization" ? "ONG / Protetor" : "Adotante"
-                }
+                role={roleLabel[role]}
                 aria-haspopup="menu"
                 aria-expanded={accountOpen}
                 onClick={() => setAccountOpen(!accountOpen)}
@@ -150,6 +159,19 @@ export default function TopBar() {
 
               {accountOpen && (
                 <Dropdown role="menu">
+                  <DropdownItem
+                    as={Link}
+                    href={profileHref}
+                    role="menuitem"
+                    onClick={() => {
+                      setAccountOpen(false);
+                      setMenuOpen(false);
+                    }}
+                  >
+                    <User size={16} aria-hidden />
+                    Meu perfil
+                  </DropdownItem>
+
                   <DropdownItem
                     type="button"
                     role="menuitem"
@@ -190,6 +212,7 @@ export default function TopBar() {
       {authenticated && menuOpen && (
         <MobileMenu id="topbar-mobile-menu">
           <NavigationLinks
+            items={items}
             orientation="vertical"
             onNavigate={() => setMenuOpen(false)}
           />
