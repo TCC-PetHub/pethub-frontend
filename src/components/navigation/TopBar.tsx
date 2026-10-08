@@ -7,9 +7,9 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { LogOut, Menu, X } from "lucide-react";
 
-import Button from "@/components/common/Button";
-import Logo from "@/components/common/Logo";
-import UserCard from "@/components/common/UserCard";
+import Button from "@/components/Button";
+import Logo from "@/components/Logo";
+import UserCard from "@/components/UserCard";
 
 interface NavigationItem {
   label: string;

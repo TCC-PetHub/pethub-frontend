@@ -38,12 +38,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       variant === "primary"
         ? {
             backgroundColor: "var(--colors-primary)",
-            color: "#FFFFFF",
+            color: "var(--colors-background)",
           }
         : variant === "tertiary"
           ? {
               backgroundColor: "var(--colors-primaryLight)",
-              color: "#FFFFFF",
+              color: "var(--colors-background)",
             }
           : variant === "secondary"
             ? {
@@ -54,7 +54,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             : variant === "danger"
               ? {
                   backgroundColor: "var(--colors-negative)",
-                  color: "#FFFFFF",
+                  color: "var(--colors-background)",
                 }
               : variant === "danger-ghost"
                 ? {
@@ -79,12 +79,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ? {
             height: "32px",
             padding: "0 12px",
-            fontSize: "13px",
+            fontSize: "var(--fontSizes-size13)",
             borderRadius: "var(--radii-lg)",
           }
         : {
             padding: "12px 16px",
-            fontSize: "14px",
+            fontSize: "var(--fontSizes-sm)",
             borderRadius: "var(--radii-lg)",
           };
 
@@ -121,7 +121,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           }
 
           button:focus-visible {
-            box-shadow: 0 0 0 3px var(--colors-primaryLight);
+            box-shadow: var(--shadows-focus);
           }
 
           button:not(:disabled):hover {
@@ -145,12 +145,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
           .btn-danger-ghost:not(:disabled):hover {
             background-color: var(--colors-negative);
-            color: #ffffff;
+            color: var(--colors-background);
           }
 
           .btn-success-ghost:not(:disabled):hover {
             background-color: var(--colors-positive);
-            color: #ffffff;
+            color: var(--colors-background);
           }
         `}</style>
       </button>

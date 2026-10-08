@@ -9,12 +9,12 @@ import { ArrowRight, Hourglass } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import Button from "@/components/common/Button";
-import { AuthTab, AuthTabs } from "@/components/common/AuthTabs";
-import Brand from "@/components/common/Brand";
-import Input from "@/components/common/Input";
-import Logo from "@/components/common/Logo";
-import { toast } from "@/components/common/Toast";
+import Button from "@/components/Button";
+import { AuthTab, AuthTabs } from "@/components/AuthTabs";
+import Brand from "@/components/Brand";
+import Input from "@/components/Input";
+import Logo from "@/components/Logo";
+import { toast } from "@/components/Toast";
 import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
 
 import {

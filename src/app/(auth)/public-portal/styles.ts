@@ -1,11 +1,6 @@
 import Link from "next/link";
 
-import { globalCss, styled } from "@/styles";
-
-export const resetGlobal = globalCss({
-  "*, *::before, *::after": { boxSizing: "border-box" },
-  "html, body": { margin: 0, padding: 0 },
-});
+import { styled } from "@/styles";
 
 export const Page = styled("div", {
   minHeight: "100vh",
@@ -37,9 +32,9 @@ export const Section = styled("section", {
   variants: {
     tone: {
       mint: {
-        backgroundColor: "#F0FDFA",
-        borderTop: "1px solid #CCFBF1",
-        borderBottom: "1px solid #CCFBF1",
+        backgroundColor: "var(--colors-backgroundMint)",
+        borderTop: "1px solid var(--colors-adoptedBackground)",
+        borderBottom: "1px solid var(--colors-adoptedBackground)",
       },
     },
   },
@@ -99,7 +94,7 @@ export const Badge = styled("span", {
   alignItems: "center",
   padding: "4px 12px",
   borderRadius: "$full",
-  fontSize: 10,
+  fontSize: "var(--fontSizes-size10)",
   fontWeight: 700,
   letterSpacing: "0.08em",
   textTransform: "uppercase",
@@ -136,7 +131,7 @@ export const HeroTitle = styled("h1", {
   lineHeight: 1.15,
 
   "@md": {
-    fontSize: "3rem",
+    fontSize: "var(--fontSizes-display)",
   },
 });
 
@@ -271,7 +266,7 @@ export const IconBox = styled("span", {
 export const Tag = styled("span", {
   padding: "2px 8px",
   borderRadius: "$sm",
-  fontSize: 10,
+  fontSize: "var(--fontSizes-size10)",
   fontWeight: 600,
 
   variants: {
@@ -384,7 +379,7 @@ export const PartnerFooter = styled("div", {
 export const Footer = styled("footer", {
   padding: "$2xl 0 $lg",
   backgroundColor: "$text",
-  color: "#94A3B8",
+  color: "var(--colors-textSubtle)",
 });
 
 export const FooterGrid = styled("div", {
@@ -410,7 +405,7 @@ export const FooterText = styled("p", {
 
 export const FooterTitle = styled("h4", {
   margin: "0 0 $md",
-  color: "#FFFFFF",
+  color: "var(--colors-background)",
   fontSize: "$sm",
   fontWeight: 600,
 });
@@ -425,12 +420,12 @@ export const FooterList = styled("ul", {
   fontSize: "$xs",
 
   a: {
-    color: "#94A3B8",
+    color: "var(--colors-textSubtle)",
     textDecoration: "none",
     transition: "color 200ms ease",
 
     "&:hover": {
-      color: "#FFFFFF",
+      color: "var(--colors-background)",
     },
   },
 });
@@ -438,7 +433,7 @@ export const FooterList = styled("ul", {
 export const FooterBottom = styled("div", {
   marginTop: "$xl",
   paddingTop: "$md",
-  borderTop: "1px solid #1E293B",
+  borderTop: "1px solid var(--colors-footerBorder)",
   fontSize: "$xs",
 });
 

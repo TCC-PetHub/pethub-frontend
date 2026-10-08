@@ -92,7 +92,7 @@ export function CustomToast({
           flex: 1;
           padding-right: 8px;
           color: var(--colors-text);
-          font-size: 14px;
+          font-size: var(--fontSizes-sm);
           font-weight: 500;
           line-height: 1.5;
           overflow-wrap: anywhere;
