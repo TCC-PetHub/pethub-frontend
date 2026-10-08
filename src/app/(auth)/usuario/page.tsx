@@ -1,5 +1,5 @@
 "use client";
-import Input from "@/components/atoms/Input";
+import Input from "@/components/Input";
 
 
 import Link from "next/link";
@@ -15,7 +15,7 @@ import {
   Pencil,
   X,
 } from "lucide-react";
-import TopBar from "@/components/organisms/TopBar";
+import TopBar from "@/components/TopBar";
 import styles, { userStyles } from "@/app/(auth)/usuario/styles";
 
 import { useUserPortal } from "@/features/user/useUserPortal";

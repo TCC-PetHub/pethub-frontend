@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 import {
   getActiveNavigationHref,
   USER_NAV_ITEMS,
-} from "@/components/molecules/NavigationLinks/items";
+} from "@/components/NavigationLinks/items";
 function subscribeHash(callback: () => void) {
   window.addEventListener("hashchange", callback);
   window.addEventListener("popstate", callback);

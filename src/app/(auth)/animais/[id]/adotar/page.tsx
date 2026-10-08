@@ -1,6 +1,6 @@
-import PortalShell from "@/components/templates/PortalShell";
+import PortalShell from "@/components/PortalShell";
 import { notFound } from "next/navigation";
-import AdoptionForm from "@/components/organisms/AdoptionForm";
+import AdoptionForm from "@/components/AdoptionForm";
 import { findPet } from "@/features/animals/data";
 export default async function AdoptPage({
   params,

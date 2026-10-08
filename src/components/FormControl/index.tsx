@@ -2,7 +2,7 @@
 
 import { styled } from "@/styles";
 
-// Appearance belongs to the atoms. Pages define only field arrangement.
+// Os componentes definem os campos. As páginas organizam seu layout.
 const control = {
   width: "100%",
   boxSizing: "border-box",

@@ -1,11 +1,11 @@
 "use client";
-import Input from "@/components/atoms/Input";
-import Textarea from "@/components/atoms/Textarea";
-import Select from "@/components/atoms/Select";
+import Input from "@/components/Input";
+import Textarea from "@/components/Textarea";
+import Select from "@/components/Select";
 
 import { useEffect, useState, type FormEvent } from "react";
 import { Check, Building2 } from "lucide-react";
-import s from "@/components/templates/PortalShell/styles";
+import s from "@/components/PortalShell/styles";
 import type { Pet } from "@/features/animals/data";
 export default function AdoptionForm({ pet }: { pet: Pet }) {
   const [step, setStep] = useState(1);

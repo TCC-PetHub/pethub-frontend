@@ -1,6 +1,6 @@
 "use client";
 import type { ReactNode } from "react";
-import TopBar from "@/components/organisms/TopBar";
+import TopBar from "@/components/TopBar";
 import styles, { portalStyles } from "./styles";
 
 // Template: estrutura visual compartilhada, sem dados próprios da conta.

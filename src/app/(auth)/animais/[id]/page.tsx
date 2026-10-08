@@ -1,7 +1,7 @@
-import PortalShell from "@/components/templates/PortalShell";
+import PortalShell from "@/components/PortalShell";
 import s from "./styles";
 import { notFound } from "next/navigation";
-import AnimalProfile from "@/components/organisms/AnimalProfile";
+import AnimalProfile from "@/components/AnimalProfile";
 import { findPet } from "@/features/animals/data";
 export default async function AnimalPage({
   params,

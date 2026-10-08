@@ -2,7 +2,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Building2, Share2, Heart } from "lucide-react";
-import s from "@/components/templates/PortalShell/styles";
+import s from "@/components/PortalShell/styles";
 import type { Pet } from "@/features/animals/data";
 const tabs = [
   "Informações",

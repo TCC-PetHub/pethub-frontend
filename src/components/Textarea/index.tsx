@@ -1,6 +1,6 @@
 "use client";
 import { forwardRef, useId, type TextareaHTMLAttributes } from "react";
-import { TextareaControl, ControlError } from "./FormControl";
+import { TextareaControl, ControlError } from "@/components/FormControl";
 
 export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> { error?: string; }
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea({ error, id, "aria-describedby": description, ...props }, ref) {

@@ -1,7 +1,7 @@
 "use client";
-import Input from "@/components/atoms/Input";
-import Textarea from "@/components/atoms/Textarea";
-import Select from "@/components/atoms/Select";
+import Input from "@/components/Input";
+import Textarea from "@/components/Textarea";
+import Select from "@/components/Select";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
@@ -14,7 +14,7 @@ import {
   Headphones,
   X,
 } from "lucide-react";
-import PortalShell from "@/components/templates/PortalShell";
+import PortalShell from "@/components/PortalShell";
 import s from "@/app/(auth)/suporte/styles";
 type Ticket = {
   id: string;

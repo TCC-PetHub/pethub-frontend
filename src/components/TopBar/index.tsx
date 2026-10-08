@@ -3,11 +3,11 @@
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut, Menu, X } from "lucide-react";
-import Button from "@/components/atoms/Button";
-import { toast } from "@/components/atoms/Toast";
-import Logo from "@/components/atoms/Logo";
-import UserCard from "@/components/molecules/UserCard";
-import NavigationLinks from "@/components/molecules/NavigationLinks";
+import Button from "@/components/Button";
+import { toast } from "@/components/Toast";
+import Logo from "@/components/Logo";
+import UserCard from "@/components/UserCard";
+import NavigationLinks from "@/components/NavigationLinks";
 import {
   useAuth,
   PUBLIC_HOME,

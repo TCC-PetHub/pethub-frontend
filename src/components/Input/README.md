@@ -15,7 +15,7 @@ Quando `type="password"`, o componente adiciona um controle para revelar ou ocul
 Use o mesmo componente com `type="file"`. `FileInputProps` descreve os atributos dessa opção; o arquivo permanece no input nativo para `FormData` e bibliotecas de formulário. O componente preserva `ref` e `onChange`.
 
 ```tsx
-import Input, { type FileInputProps } from "@/components/atoms/Input";
+import Input, { type FileInputProps } from "@/components/Input";
 
 const attachment: FileInputProps = {
   type: "file",

@@ -5,10 +5,10 @@ import { ArrowLeft, PawPrint } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import { toast } from "@/components/atoms/Toast";
-import Logo from "@/components/atoms/Logo";
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+import { toast } from "@/components/Toast";
+import Logo from "@/components/Logo";
 import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
 
 import {

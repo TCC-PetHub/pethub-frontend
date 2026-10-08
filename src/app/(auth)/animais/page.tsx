@@ -1,9 +1,9 @@
 "use client";
-import Select from "@/components/atoms/Select";
+import Select from "@/components/Select";
 import { useState } from "react";
 import Link from "next/link";
 import { Building2, CalendarDays } from "lucide-react";
-import PortalShell from "@/components/templates/PortalShell";
+import PortalShell from "@/components/PortalShell";
 import s from "@/app/(auth)/animais/styles";
 import { pets } from "@/features/animals/data";
 export default function AnimalsPage() {

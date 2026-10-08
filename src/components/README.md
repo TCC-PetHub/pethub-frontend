@@ -1,8 +1,7 @@
 # Componentes compartilhados
 
-- `atoms`: Button, Input (texto, senha e arquivo), Select, Textarea, Logo e Toast.
-- `molecules`: Brand, AuthTabs, UserCard e NavigationLinks.
-- `organisms`: TopBar, AnimalProfile (conteúdo do animal) e AdoptionForm (fluxo do formulário).
-- `templates`: PortalShell (cabeçalho e área principal).
+Cada componente possui sua própria pasta diretamente em `src/components`, como `Input`, `Button`, `TopBar`, `NavigationLinks` e `PortalShell`.
 
-As páginas compõem esses blocos nas rotas em `src/app`. Um organismo não inclui o cabeçalho da aplicação nem representa sozinho uma rota completa. O estado e os dados do domínio ficam em `src/features`. Estilos básicos dos campos pertencem aos átomos; estilos de layout pertencem ao template ou à página.
+O arquivo principal é `index.tsx`. Estilos e documentação ficam na mesma pasta quando necessários. Exemplo de import: `import Input from "@/components/Input"`.
+
+As páginas compõem os componentes nas rotas de `src/app`. O estado e os dados do domínio ficam em `src/features`. Os campos mantêm seus estilos compartilhados; a página organiza o layout.

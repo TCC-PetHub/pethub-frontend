@@ -6,12 +6,12 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { z } from "zod";
 
-import Button from "@/components/atoms/Button";
-import { AuthTab, AuthTabs } from "@/components/molecules/AuthTabs";
-import Brand from "@/components/molecules/Brand";
-import Input from "@/components/atoms/Input";
-import Logo from "@/components/atoms/Logo";
-import { toast } from "@/components/atoms/Toast";
+import Button from "@/components/Button";
+import { AuthTab, AuthTabs } from "@/components/AuthTabs";
+import Brand from "@/components/Brand";
+import Input from "@/components/Input";
+import Logo from "@/components/Logo";
+import { toast } from "@/components/Toast";
 import {
   AUTHENTICATED_HOME,
   PUBLIC_HOME,

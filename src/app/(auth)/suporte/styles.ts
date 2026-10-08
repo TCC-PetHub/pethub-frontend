@@ -1,4 +1,4 @@
 export {
   default,
   portalStyles,
-} from "@/components/templates/PortalShell/styles";
+} from "@/components/PortalShell/styles";

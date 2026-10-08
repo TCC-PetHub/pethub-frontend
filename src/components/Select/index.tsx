@@ -1,6 +1,6 @@
 "use client";
 import { forwardRef, useId, type SelectHTMLAttributes } from "react";
-import { SelectControl, ControlError } from "./FormControl";
+import { SelectControl, ControlError } from "@/components/FormControl";
 
 export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> { error?: string; }
 const Select = forwardRef<HTMLSelectElement, SelectProps>(function Select({ error, id, "aria-describedby": description, ...props }, ref) {
