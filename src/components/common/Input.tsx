@@ -8,6 +8,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
   variant?: "default" | "compact";
   icon?: ReactNode;
+  containerClassName?: string;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -20,6 +21,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       style,
       variant = "default",
       icon,
+      containerClassName = "",
       ...props
     },
     ref,
@@ -31,10 +33,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
     return (
-      <div className="input-container">
-        <div className="input-wrapper">
+      <div className={`pethub-input-container ${containerClassName}`}>
+        <div className="pethub-input-control">
           {icon && (
-            <span className="input-icon" aria-hidden="true">
+            <span className="pethub-input-icon" aria-hidden="true">
               {icon}
             </span>
           )}
@@ -45,11 +47,11 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             type={inputType}
             suppressHydrationWarning
             className={`
-              input-field
-              ${variant === "compact" ? "input-compact" : ""}
-              ${icon ? "input-with-icon" : ""}
-              ${isPassword ? "input-with-password" : ""}
-              ${error ? "input-error" : ""}
+              pethub-input
+              ${variant === "compact" ? "pethub-input--compact" : ""}
+              ${icon ? "pethub-input--with-icon" : ""}
+              ${isPassword ? "pethub-input--with-password" : ""}
+              ${error ? "pethub-input--error" : ""}
               ${className}
             `}
             style={style}
@@ -65,7 +67,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               aria-label={showPassword ? "Hide Password" : "Show Password"}
               aria-pressed={showPassword}
               suppressHydrationWarning
-              className="password-toggle"
+              className="pethub-input-password-toggle"
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
@@ -73,22 +75,22 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         </div>
 
         {error && (
-          <p id={`${id}-error`} className="input-error-message">
+          <p id={`${id}-error`} className="pethub-input-error-message">
             {error}
           </p>
         )}
 
         <style jsx>{`
-          .input-container {
+          .pethub-input-container {
             width: 100%;
           }
 
-          .input-wrapper {
+          .pethub-input-control {
             position: relative;
             width: 100%;
           }
 
-          .input-field {
+          .pethub-input {
             display: block;
             width: 100%;
             box-sizing: border-box;
@@ -107,44 +109,44 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               background-color 200ms ease;
           }
 
-          .input-field::placeholder {
+          .pethub-input::placeholder {
             color: var(--colors-textMuted);
             opacity: 1;
           }
 
-          .input-field:focus {
+          .pethub-input:focus {
             border-color: var(--colors-primaryLight);
             box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
           }
 
-          .input-field:disabled {
+          .pethub-input:disabled {
             cursor: not-allowed;
             opacity: 0.5;
           }
 
-          .input-field.input-compact {
+          .pethub-input.pethub-input--compact {
             padding-top: 8px;
             padding-bottom: 8px;
           }
 
-          .input-field.input-with-icon {
+          .pethub-input.pethub-input--with-icon {
             padding-left: 40px;
           }
 
-          .input-field.input-with-password {
+          .pethub-input.pethub-input--with-password {
             padding-right: 48px;
           }
 
-          .input-field.input-error {
+          .pethub-input.pethub-input--error {
             border-color: var(--colors-negative);
           }
 
-          .input-field.input-error:focus {
+          .pethub-input.pethub-input--error:focus {
             border-color: var(--colors-negative);
             box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
           }
 
-          .input-icon {
+          .pethub-input-icon {
             position: absolute;
             left: 12px;
             top: 50%;
@@ -156,7 +158,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             pointer-events: none;
           }
 
-          .password-toggle {
+          .pethub-input-password-toggle {
             position: absolute;
             top: 0;
             right: 0;
@@ -172,17 +174,17 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             transition: color 200ms ease;
           }
 
-          .password-toggle:hover {
+          .pethub-input-password-toggle:hover {
             color: var(--colors-text);
           }
 
-          .password-toggle:focus-visible {
+          .pethub-input-password-toggle:focus-visible {
             outline: 2px solid var(--colors-primaryLight);
             outline-offset: -4px;
             border-radius: var(--radii-md);
           }
 
-          .input-error-message {
+          .pethub-input-error-message {
             margin-top: 6px;
             color: var(--colors-negative);
             font-size: 12px;
@@ -190,7 +192,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           }
 
           @media (min-width: 640px) {
-            .input-error-message {
+            .pethub-input-error-message {
               font-size: 14px;
             }
           }

@@ -96,33 +96,33 @@ function LoginContent() {
 
     // LoginPage: contêiner principal da página.
     return (
-        <main className={loginStyles()}>
+        <main className={`${loginStyles()} login-page`}>
             {/* LoginPanel: painel que agrupa os componentes de autenticação. */}
-            <section className="login-panel" aria-label="Acesso ao PetHub">
-                <Brand>
-                    <Logo href={PUBLIC_HOME} />
+            <section className="login-panel login-auth-panel" aria-label="Acesso ao PetHub">
+                <Brand className="login-brand">
+                    <Logo className="login-logo" href={PUBLIC_HOME} />
                 </Brand>
 
                 {/* AuthTabs: navegação entre login e cadastro. */}
-                <AuthTabs aria-label="Acesso à conta">
-                    <AuthTab as="span" active aria-current="page">
+                <AuthTabs className="login-auth-tabs" aria-label="Acesso à conta">
+                    <AuthTab className="login-tab login-tab-active" as="span" active aria-current="page">
                         Entrar
                     </AuthTab>
-                    <AuthTab href={`/register?perfil=${currentProfile}`}>
+                    <AuthTab className="login-tab login-tab-register" href={`/register?perfil=${currentProfile}`}>
                         Criar conta
                     </AuthTab>
                 </AuthTabs>
 
                 {/* LoginForm: perfil, credenciais, preferências e envio. */}
-                <form className="login-form" onSubmit={handleLoginSubmit} noValidate>
+                <form className="login-form login-credentials-form" onSubmit={handleLoginSubmit} noValidate>
                     {/* ProfilePicker: cada opção é um link com o perfil na URL. */}
-                    <fieldset className="profile-picker">
+                    <fieldset className="profile-picker login-profile-picker">
                         <legend>Você é:</legend>
-                        <div className="profile-options">
+                        <div className="profile-options login-profile-options">
                             {profiles.map((profileOption) => (
                                 <Link
                                     key={profileOption}
-                                    className="profile-option"
+                                    className="profile-option login-profile-option"
                                     href={`/login?perfil=${profileOption}`}
                                     replace
                                     scroll={false}
@@ -139,9 +139,11 @@ function LoginContent() {
                     </fieldset>
 
                     {/* EmailField: entrada e mensagem de validação do e-mail. */}
-                    <div className="form-field">
-                        <label htmlFor="email">E-mail</label>
+                    <div className="form-field login-email-field">
+                        <label className="login-field-label login-email-label" htmlFor="email">E-mail</label>
                         <Input
+                            className="login-email-control"
+                            containerClassName="login-email-input"
                             id="email"
                             name="email"
                             type="email"
@@ -153,9 +155,11 @@ function LoginContent() {
                     </div>
 
                     {/* PasswordField: entrada e mensagem de validação da senha. */}
-                    <div className="form-field">
-                        <label htmlFor="password">Senha</label>
+                    <div className="form-field login-password-field">
+                        <label className="login-field-label login-password-label" htmlFor="password">Senha</label>
                         <Input
+                            className="login-password-control"
+                            containerClassName="login-password-input"
                             id="password"
                             name="password"
                             type="password"
@@ -167,27 +171,28 @@ function LoginContent() {
                     </div>
 
                     {/* LoginFormOptions: lembrar sessão e recuperar senha. */}
-                    <div className="form-options">
-                        <label className="remember-option">
-                            <input type="checkbox" name="remember" />
+                    <div className="form-options login-form-options">
+                        <label className="remember-option login-remember-option">
+                            <input className="login-remember-checkbox" type="checkbox" name="remember" />
                             <span>Lembrar-me</span>
                         </label>
-                        <Link href="/forgot-password">Esqueci minha senha</Link>
+                        <Link className="login-forgot-password-link" href="/forgot-password">Esqueci minha senha</Link>
                     </div>
 
                     {/* LoginSubmitButton: envio das credenciais. */}
-                    <Button type="submit">
+                    <Button className="login-submit-button" type="submit">
                         Entrar <ArrowRight size={16} aria-hidden="true" />
                     </Button>
                 </form>
 
                 {/* SocialLoginDivider: separador das opções de autenticação. */}
-                <div className="divider">
+                <div className="divider login-social-divider">
                     <span>ou continue com</span>
                 </div>
 
                 {/* GoogleLoginButton: ação de login social com Google. */}
                 <Button
+                    className="login-google-button"
                     variant="secondary"
                     onClick={() =>
                         // TODO: integrar login com Google
