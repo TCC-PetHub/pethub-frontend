@@ -1,7 +1,9 @@
-import PortalShell from "@/components/PortalShell";
 import { notFound } from "next/navigation";
+
 import AdoptionForm from "@/components/AdoptionForm";
+import PortalShell from "@/components/PortalShell";
 import { findPet } from "@/features/animals/data";
+
 export default async function AdoptPage({
   params,
 }: {
@@ -9,8 +11,12 @@ export default async function AdoptPage({
 }) {
   const { id } = await params;
   const pet = findPet(id);
+
   if (!pet || pet.status !== "Disponível") notFound();
-  return (<PortalShell>
-    <AdoptionForm pet={pet} />
-  </PortalShell>);
+
+  return (
+    <PortalShell>
+      <AdoptionForm pet={pet} />
+    </PortalShell>
+  );
 }

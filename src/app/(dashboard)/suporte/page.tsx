@@ -1,21 +1,59 @@
 "use client";
-import Input from "@/components/Input";
-import Textarea from "@/components/Textarea";
-import Select from "@/components/Select";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+
 import {
   BookOpen,
+  Headphones,
   HelpCircle,
   MessageCircle,
-  Wrench,
   Search,
   Send,
-  Headphones,
+  Wrench,
   X,
 } from "lucide-react";
+
+import Button from "@/components/Button";
+import Input from "@/components/Input";
 import PortalShell from "@/components/PortalShell";
-import s from "@/app/(auth)/suporte/styles";
+import Select from "@/components/Select";
+import Textarea from "@/components/Textarea";
+
+import {
+  Badge,
+  CloseButton,
+  FaqAnswer,
+  FaqItem,
+  FaqPanel,
+  FaqQuestion,
+  Field,
+  FormActions,
+  FormGrid,
+  FormHint,
+  FormPanel,
+  FormTitle,
+  Heading,
+  HeadingText,
+  HeadingTitle,
+  HelpBox,
+  HelpText,
+  HelpTitle,
+  Layout,
+  Modal,
+  ModalTitle,
+  Muted,
+  Notice,
+  PanelTitle,
+  Table,
+  TableNote,
+  TableScroll,
+  TextButton,
+  TicketHeader,
+  TicketPanel,
+  TypeButton,
+  TypeOptions,
+} from "./styles";
+
 type Ticket = {
   id: string;
   subject: string;
@@ -25,6 +63,10 @@ type Ticket = {
   status: string;
   attachment?: string;
 };
+
+const STORAGE_KEY = "pethub:support";
+const MAX_ATTACHMENT_SIZE = 10 * 1024 * 1024;
+
 const seed: Ticket[] = [
   {
     id: "SUP-1051",
@@ -51,6 +93,7 @@ const seed: Ticket[] = [
     status: "Resolvida",
   },
 ];
+
 const faq = [
   {
     q: "Como acompanhar minha solicitação de adoção?",
@@ -69,52 +112,71 @@ const faq = [
     a: "Selecione Problema no formulário, descreva o que aconteceu e envie a solicitação.",
   },
 ];
+
+const requestTypes = [
+  { name: "Reclamação", icon: BookOpen },
+  { name: "Dúvida", icon: HelpCircle },
+  { name: "Pergunta", icon: MessageCircle },
+  { name: "Problema", icon: Wrench },
+];
+
 export default function SupportPage() {
   const [type, setType] = useState("Problema");
   const [tickets, setTickets] = useState(seed);
-  const [status, setStatus] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Ticket | null>(null);
   const [notice, setNotice] = useState("");
   const [attachmentError, setAttachmentError] = useState("");
   const dialogRef = useRef<HTMLDialogElement>(null);
+
   useEffect(() => {
-    if (selected) dialogRef.current?.showModal();
-    else dialogRef.current?.close();
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (selected && !dialog.open) dialog.showModal();
+    else if (!selected && dialog.open) dialog.close();
   }, [selected]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       try {
-        const saved = JSON.parse(
-          localStorage.getItem("pethub:support") || "null",
-        );
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
         if (Array.isArray(saved)) setTickets(saved);
-      } catch { }
+      } catch {}
     }, 0);
+
     return () => clearTimeout(timer);
   }, []);
+
   function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+
     const form = e.currentTarget;
     const data = new FormData(form);
-    const file = data.get("attachment") as File;
-    if (file?.size > 10 * 1024 * 1024) {
+    const file = data.get("attachment");
+    const attachment = file instanceof File ? file : null;
+
+    if (attachment && attachment.size > MAX_ATTACHMENT_SIZE) {
       setAttachmentError("O anexo deve ter até 10 MB.");
       return;
     }
+
     setAttachmentError("");
-    const ticket = {
+
+    const ticket: Ticket = {
       id: `SUP-${crypto.randomUUID().slice(0, 8).toUpperCase()}`,
       subject: String(data.get("subject")).trim(),
       description: String(data.get("description")).trim(),
       type,
       date: new Date().toLocaleDateString("pt-BR"),
       status: "Em análise",
-      attachment: file?.name || undefined,
+      attachment: attachment?.name || undefined,
     };
     const next = [ticket, ...tickets];
+
     try {
-      localStorage.setItem("pethub:support", JSON.stringify(next));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
       setTickets(next);
       form.reset();
       setNotice(
@@ -124,46 +186,55 @@ export default function SupportPage() {
       setNotice("Não foi possível salvar a solicitação. Tente novamente.");
     }
   }
+
+  const normalizedSearch = search.toLocaleLowerCase("pt-BR");
+  const visibleFaq = faq.filter(({ q, a }) =>
+    `${q} ${a}`.toLocaleLowerCase("pt-BR").includes(normalizedSearch),
+  );
+  const visibleTickets = tickets.filter(
+    (ticket) => !statusFilter || ticket.status === statusFilter,
+  );
+
   return (
     <PortalShell>
-      <div className={s.heading}>
+      <Heading>
         <div>
-          <h1>Suporte</h1>
-          <p>
+          <HeadingTitle>Suporte</HeadingTitle>
+          <HeadingText>
             Precisa de ajuda, Carlos? Envie uma dúvida, pergunte ou registre um
             problema.
-          </p>
+          </HeadingText>
         </div>
-      </div>
-      <div className={s.supportLayout}>
-        <section className={`${s.card} ${s.formPanel}`}>
+      </Heading>
+
+      <Layout>
+        <FormPanel>
           <form onSubmit={submit}>
-            <h2>Enviar uma solicitação</h2>
-            <p className={s.muted}>
+            <FormTitle>Enviar uma solicitação</FormTitle>
+            <Muted>
               Conte o que aconteceu ou envie sua pergunta para a equipe PetHub.
-            </p>
-            <label>Tipo de solicitação *</label>
-            <div className={s.typeOptions}>
-              {[
-                { name: "Reclamação", icon: BookOpen },
-                { name: "Dúvida", icon: HelpCircle },
-                { name: "Pergunta", icon: MessageCircle },
-                { name: "Problema", icon: Wrench },
-              ].map(({ name, icon: Icon }) => (
-                <button
+            </Muted>
+
+            <Field as="span" id="request-type">
+              Tipo de solicitação *
+            </Field>
+            <TypeOptions role="group" aria-labelledby="request-type">
+              {requestTypes.map(({ name, icon: Icon }) => (
+                <TypeButton
                   type="button"
                   key={name}
+                  selected={type === name}
                   aria-pressed={type === name}
-                  className={type === name ? s.selectedType : ""}
                   onClick={() => setType(name)}
                 >
                   <Icon size={16} />
                   {name}
-                </button>
+                </TypeButton>
               ))}
-            </div>
-            <div className={s.formGrid}>
-              <label>
+            </TypeOptions>
+
+            <FormGrid>
+              <Field>
                 Área relacionada *
                 <Select name="area" required>
                   <option>Minha conta</option>
@@ -172,8 +243,9 @@ export default function SupportPage() {
                   <option>Doações</option>
                   <option>Outro</option>
                 </Select>
-              </label>
-              <label>
+              </Field>
+
+              <Field>
                 E-mail para retorno *
                 <Input
                   name="email"
@@ -181,9 +253,10 @@ export default function SupportPage() {
                   required
                   defaultValue="carlos.alberto@email.com"
                 />
-              </label>
-            </div>
-            <label>
+              </Field>
+            </FormGrid>
+
+            <Field>
               Assunto *
               <Input
                 name="subject"
@@ -191,8 +264,9 @@ export default function SupportPage() {
                 maxLength={120}
                 placeholder="Resuma sua solicitação"
               />
-            </label>
-            <label>
+            </Field>
+
+            <Field>
               Descrição *
               <Textarea
                 name="description"
@@ -200,8 +274,9 @@ export default function SupportPage() {
                 minLength={10}
                 placeholder="Descreva o ocorrido. Inclua os passos e o resultado esperado."
               />
-            </label>
-            <label>
+            </Field>
+
+            <Field>
               Anexo (opcional)
               <Input
                 type="file"
@@ -212,27 +287,26 @@ export default function SupportPage() {
                 error={attachmentError}
                 onChange={() => setAttachmentError("")}
               />
-            </label>
-            <div className={s.formActions}>
-              <small className={s.muted}>
+            </Field>
+
+            <FormActions>
+              <FormHint>
                 Demonstração: o anexo terá apenas o nome registrado.
-              </small>
-              <button type="submit" className={s.primary}>
+              </FormHint>
+              <Button variant="primary" type="submit">
                 <Send size={14} />
                 Enviar solicitação
-              </button>
-            </div>
-            {notice && (
-              <p role="status" className={s.notice}>
-                {notice}
-              </p>
-            )}
+              </Button>
+            </FormActions>
+
+            {notice && <Notice role="status">{notice}</Notice>}
           </form>
-        </section>
+        </FormPanel>
+
         <aside>
-          <section className={`${s.card} ${s.faq}`}>
-            <h2>Perguntas frequentes</h2>
-            <p className={s.muted}>Respostas rápidas para usar o PetHub.</p>
+          <FaqPanel>
+            <PanelTitle>Perguntas frequentes</PanelTitle>
+            <Muted>Respostas rápidas para usar o PetHub.</Muted>
             <Input
               type="search"
               icon={<Search size={16} />}
@@ -241,52 +315,47 @@ export default function SupportPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            {faq
-              .filter((f) =>
-                `${f.q} ${f.a}`
-                  .toLocaleLowerCase("pt-BR")
-                  .includes(search.toLocaleLowerCase("pt-BR")),
-              )
-              .map((f) => (
-                <details key={f.q}>
-                  <summary>{f.q}</summary>
-                  <p>{f.a}</p>
-                </details>
-              ))}
-          </section>
-          <section className={s.help}>
-            <h2>
+            {visibleFaq.map(({ q, a }) => (
+              <FaqItem key={q}>
+                <FaqQuestion>{q}</FaqQuestion>
+                <FaqAnswer>{a}</FaqAnswer>
+              </FaqItem>
+            ))}
+          </FaqPanel>
+
+          <HelpBox>
+            <HelpTitle>
               <Headphones size={17} />
               Estamos aqui para ajudar
-            </h2>
-            <p>
+            </HelpTitle>
+            <HelpText>
               Descreva o que aconteceu e informe como podemos ajudar. Você pode
               acompanhar suas solicitações logo abaixo.
-            </p>
-          </section>
+            </HelpText>
+          </HelpBox>
         </aside>
-      </div>
-      <section className={`${s.card} ${s.ticketPanel}`}>
-        <div className={s.row}>
+      </Layout>
+
+      <TicketPanel>
+        <TicketHeader>
           <div>
-            <h2>Minhas solicitações</h2>
-            <p className={s.muted}>
-              Acompanhe o andamento e consulte os detalhes.
-            </p>
+            <PanelTitle>Minhas solicitações</PanelTitle>
+            <Muted>Acompanhe o andamento e consulte os detalhes.</Muted>
           </div>
           <Select
             aria-label="Filtrar solicitações por status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
           >
             <option value="">Todos os status</option>
             <option>Em análise</option>
             <option>Respondida</option>
             <option>Resolvida</option>
           </Select>
-        </div>
-        <div className={s.tableScroll}>
-          <table className={s.table}>
+        </TicketHeader>
+
+        <TableScroll>
+          <Table>
             <thead>
               <tr>
                 <th>PROTOCOLO / DATA</th>
@@ -297,49 +366,48 @@ export default function SupportPage() {
               </tr>
             </thead>
             <tbody>
-              {tickets
-                .filter((t) => !status || t.status === status)
-                .map((t) => (
-                  <tr key={t.id}>
-                    <td>
-                      <strong>{t.id}</strong>
-                      <br />
-                      {t.date}
-                    </td>
-                    <td>
-                      <strong>{t.subject}</strong>
-                      <br />
-                      {t.description}
-                    </td>
-                    <td>{t.type}</td>
-                    <td>
-                      <span
-                        className={`${s.badge} ${t.status === "Em análise" ? s.amber : s.mint}`}
-                      >
-                        {t.status}
-                      </span>
-                    </td>
-                    <td>
-                      <button
-                        className={s.textButton}
-                        onClick={() => setSelected(t)}
-                      >
-                        Ver detalhes ›
-                      </button>
-                    </td>
-                  </tr>
-                ))}
+              {visibleTickets.map((ticket) => (
+                <tr key={ticket.id}>
+                  <td>
+                    <strong>{ticket.id}</strong>
+                    <br />
+                    {ticket.date}
+                  </td>
+                  <td>
+                    <strong>{ticket.subject}</strong>
+                    <br />
+                    {ticket.description}
+                  </td>
+                  <td>{ticket.type}</td>
+                  <td>
+                    <Badge
+                      tone={ticket.status === "Em análise" ? "amber" : "mint"}
+                    >
+                      {ticket.status}
+                    </Badge>
+                  </td>
+                  <td>
+                    <TextButton
+                      type="button"
+                      onClick={() => setSelected(ticket)}
+                    >
+                      Ver detalhes ›
+                    </TextButton>
+                  </td>
+                </tr>
+              ))}
             </tbody>
-          </table>
-        </div>
-        <p className={s.muted}>
+          </Table>
+        </TableScroll>
+
+        <TableNote>
           Solicitações demonstrativas armazenadas neste navegador.
-        </p>
-      </section>
-      <dialog
+        </TableNote>
+      </TicketPanel>
+
+      <Modal
         ref={dialogRef}
         aria-label="Detalhes da solicitação"
-        className={s.modal}
         onCancel={() => setSelected(null)}
         onClick={(e) => {
           if (e.target === e.currentTarget) setSelected(null);
@@ -347,17 +415,14 @@ export default function SupportPage() {
       >
         {selected && (
           <>
-            <button
-              className={s.close}
+            <CloseButton
+              type="button"
               aria-label="Fechar detalhes"
               onClick={() => setSelected(null)}
-              onKeyDown={(e) => {
-                if (e.key === "Escape") setSelected(null);
-              }}
             >
               <X size={20} />
-            </button>
-            <h2>{selected.subject}</h2>
+            </CloseButton>
+            <ModalTitle>{selected.subject}</ModalTitle>
             <p>
               {selected.id} • {selected.date}
             </p>
@@ -366,12 +431,10 @@ export default function SupportPage() {
             {selected.attachment && (
               <p>Anexo registrado: {selected.attachment}</p>
             )}
-            <p className={s.muted}>
-              Registro demonstrativo, sem envio ao atendimento.
-            </p>
+            <Muted>Registro demonstrativo, sem envio ao atendimento.</Muted>
           </>
         )}
-      </dialog>
+      </Modal>
     </PortalShell>
   );
 }

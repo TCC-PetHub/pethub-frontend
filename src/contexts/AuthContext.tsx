@@ -1,5 +1,11 @@
 "use client";
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react";
 import type { LoginCredentials, SessionUser } from "@/lib/auth/types";
 
 export const PUBLIC_HOME = "/public-portal";
@@ -13,19 +19,32 @@ interface AuthContextValue {
 }
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children, initialUser = null }: { children: ReactNode; initialUser?: SessionUser | null }) {
+export function AuthProvider({
+  children,
+  initialUser = null,
+}: {
+  children: ReactNode;
+  initialUser?: SessionUser | null;
+}) {
   const [user, setUser] = useState(initialUser);
   useEffect(() => {
-    try { localStorage.removeItem("pethub:authenticated"); } catch {}
+    try {
+      localStorage.removeItem("pethub:authenticated");
+    } catch {}
     const controller = new AbortController();
     async function syncSession() {
       try {
-        const response = await fetch("/api/auth/session", { cache: "no-store", signal: controller.signal });
+        const response = await fetch("/api/auth/session", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
         if (response.ok || response.status === 401) {
           const data = await response.json();
           setUser(data.user ?? null);
         }
-      } catch { /* A network failure does not replace a verified server session. */ }
+      } catch {
+        /* A network failure does not replace a verified server session. */
+      }
     }
     const timer = window.setInterval(syncSession, 60_000);
     window.addEventListener("focus", syncSession);
@@ -48,14 +67,22 @@ export function AuthProvider({ children, initialUser = null }: { children: React
   }
   async function logout() {
     const response = await fetch("/api/auth/logout", { method: "POST" });
-    if (!response.ok) throw new Error("Não foi possível encerrar a sessão. Tente novamente.");
+    if (!response.ok)
+      throw new Error("Não foi possível encerrar a sessão. Tente novamente.");
     setUser(null);
   }
-  return <AuthContext.Provider value={{ user, isAuthenticated: user !== null, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider
+      value={{ user, isAuthenticated: user !== null, login, logout }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 }
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth deve ser usado dentro de <AuthProvider>");
+  if (!context)
+    throw new Error("useAuth deve ser usado dentro de <AuthProvider>");
   return context;
 }
 export function useHomeHref() {

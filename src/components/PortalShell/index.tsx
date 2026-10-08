@@ -1,14 +1,17 @@
 "use client";
+
 import type { ReactNode } from "react";
+
 import TopBar from "@/components/TopBar";
-import styles, { portalStyles } from "./styles";
+
+import { Main, Page } from "./styles";
 
 // Template: estrutura visual compartilhada, sem dados próprios da conta.
 export default function PortalShell({ children }: { children: ReactNode }) {
   return (
-    <div className={`${portalStyles()} ${styles.page}`}>
+    <Page>
       <TopBar />
-      <main className={styles.main}>{children}</main>
-    </div>
+      <Main>{children}</Main>
+    </Page>
   );
 }
