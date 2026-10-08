@@ -1,84 +1,172 @@
 "use client";
-import Input from "@/components/Input";
-import Textarea from "@/components/Textarea";
-import Select from "@/components/Select";
 
-import { useEffect, useState, type FormEvent } from "react";
-import { Check, Building2 } from "lucide-react";
-import s from "@/components/PortalShell/styles";
+import { useEffect, useState } from "react";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Building2, Check } from "lucide-react";
+import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
+
+import Button from "@/components/Button";
+import Input from "@/components/Input";
+import Select from "@/components/Select";
+import Textarea from "@/components/Textarea";
+import { toast } from "@/components/Toast";
 import type { Pet } from "@/features/animals/data";
+
+import {
+  Actions,
+  Badge,
+  Checkbox,
+  ErrorMessage,
+  Field,
+  FormGrid,
+  FormPanel,
+  FormTitle,
+  Label,
+  Layout,
+  Muted,
+  PetCard,
+  PetMeta,
+  PetName,
+  PetNote,
+  PetPhoto,
+  PetDivider,
+  ProgressCard,
+  ProgressRow,
+  Step,
+  StepNumber,
+  Steps,
+  Switch,
+  SwitchRow,
+  Term,
+} from "./styles";
+
+const STEPS = ["Dados Pessoais", "Questionário", "Assinatura de Termo"];
+
+const STEP_TITLES = [
+  "Dados Pessoais",
+  "Questionário de Habitação e Rotina",
+  "Termo de Adoção Responsável",
+];
+
+const SELECT_FIELDS = [
+  {
+    name: "home",
+    label: "Tipo de Residência",
+    options: ["Casa", "Apartamento", "Outro"],
+  },
+  {
+    name: "yard",
+    label: "Possui Quintal Cercado?",
+    options: ["Sim, espaço seguro", "Não", "Não se aplica"],
+  },
+  {
+    name: "otherPets",
+    label: "Possui outros animais atualmente?",
+    options: [
+      "Não",
+      "Sim, 1 cachorro",
+      "Sim, 1 gato",
+      "Sim, mais de um animal",
+    ],
+  },
+  {
+    name: "residents",
+    label: "Número de moradores na residência",
+    options: ["1 pessoa", "2 pessoas", "3 pessoas", "4 ou mais pessoas"],
+  },
+] as const;
+
+const adoptionSchema = z
+  .object({
+    name: z.string().trim().min(1, "Campo obrigatório"),
+    email: z.string().email("E-mail inválido"),
+    phone: z.string().min(10, "Telefone inválido"),
+    address: z.string().trim().min(1, "Campo obrigatório"),
+    home: z.string().min(1, "Campo obrigatório"),
+    yard: z.string().min(1, "Campo obrigatório"),
+    otherPets: z.string().min(1, "Campo obrigatório"),
+    residents: z.string().min(1, "Campo obrigatório"),
+    reason: z.string().trim().min(20, "Mínimo 20 caracteres"),
+    visits: z.boolean(),
+    acceptedCommitment: z.boolean().refine((value) => value, {
+      message: "Aceite os compromissos para continuar",
+    }),
+    signature: z.string().min(1, "Campo obrigatório"),
+  })
+  .superRefine((data, ctx) => {
+    if (data.signature.trim() !== data.name.trim()) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["signature"],
+        message: "A confirmação deve corresponder ao seu nome completo.",
+      });
+    }
+  });
+
+type AdoptionData = z.infer<typeof adoptionSchema>;
+
+const STEP_FIELDS: (keyof AdoptionData)[][] = [
+  ["name", "email", "phone", "address"],
+  ["home", "yard", "otherPets", "residents", "reason"],
+  ["acceptedCommitment", "signature"],
+];
+
 export default function AdoptionForm({ pet }: { pet: Pet }) {
   const [step, setStep] = useState(1);
-  const [visits, setVisits] = useState(true);
   const [done, setDone] = useState(false);
-  const [error, setError] = useState("");
-  const [values, setValues] = useState<Record<string, string>>({
-    name: "Carlos Alberto",
-    email: "carlos.alberto@email.com",
-    phone: "(41) 98888-7766",
-    address: "",
-    home: "Casa",
-    yard: "Sim, espaço seguro",
-    otherPets: "Sim, 1 cachorro",
-    residents: "3 pessoas",
-    reason: "",
+
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    trigger,
+    formState: { errors, isSubmitting },
+  } = useForm<AdoptionData>({
+    resolver: zodResolver(adoptionSchema),
+    defaultValues: {
+      name: "Carlos Alberto",
+      email: "carlos.alberto@email.com",
+      phone: "(41) 98888-7766",
+      address: "",
+      home: "Casa",
+      yard: "Sim, espaço seguro",
+      otherPets: "Sim, 1 cachorro",
+      residents: "3 pessoas",
+      reason: "",
+      visits: true,
+      acceptedCommitment: false,
+      signature: "",
+    },
   });
+
+  const name = useWatch({ control, name: "name" });
+  const visits = useWatch({ control, name: "visits" });
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      try {
-        const p = JSON.parse(localStorage.getItem("pethub:profile") || "null");
-        if (p)
-          setValues((v) => ({
-            ...v,
-            name: p.name || v.name,
-            email: p.email || v.email,
-            phone: p.phone || v.phone,
-          }));
-      } catch {}
-    }, 0);
-    return () => clearTimeout(timer);
-  }, []);
-  function field(key: string, label: string, options?: string[]) {
-    return (
-      <label>
-        {label}
-        {options ? (
-          <Select
-            value={values[key]}
-            onChange={(e) => setValues({ ...values, [key]: e.target.value })}
-          >
-            {options.map((o) => (
-              <option key={o}>{o}</option>
-            ))}
-          </Select>
-        ) : (
-          <Input
-            required
-            name={key}
-            value={values[key]}
-            type={key === "email" ? "email" : key === "phone" ? "tel" : "text"}
-            onChange={(e) => setValues({ ...values, [key]: e.target.value })}
-          />
-        )}
-      </label>
-    );
-  }
-  function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (step < 3) {
-      setError("");
-      setStep(step + 1);
-      return;
-    }
-    if (values.signature?.trim() !== values.name.trim()) {
-      setError("A confirmação deve corresponder ao seu nome completo.");
-      return;
-    }
     try {
+      const profile = JSON.parse(
+        localStorage.getItem("pethub:profile") || "null",
+      );
+      if (!profile) return;
+      if (profile.name) setValue("name", profile.name);
+      if (profile.email) setValue("email", profile.email);
+      if (profile.phone) setValue("phone", profile.phone);
+    } catch {
+      // perfil inválido no localStorage: segue com os valores padrão
+    }
+  }, [setValue]);
+
+  async function onSubmit(data: AdoptionData) {
+    try {
+      // TODO: chamada real da API
       const stored = JSON.parse(
         localStorage.getItem("pethub:adoptionRequests") || "[]",
       );
       const existing = Array.isArray(stored) ? stored : [];
+
       localStorage.setItem(
         "pethub:adoptionRequests",
         JSON.stringify([
@@ -92,150 +180,201 @@ export default function AdoptionForm({ pet }: { pet: Pet }) {
             date: new Date().toLocaleDateString("pt-BR"),
             status: "Em Análise",
             tone: "analysis",
-            answers: values,
-            visits,
+            answers: data,
+            visits: data.visits,
           },
         ]),
       );
+
+      toast.success("Solicitação enviada com sucesso");
       setDone(true);
     } catch {
-      setError(
-        "Não foi possível salvar sua solicitação neste navegador. Tente novamente.",
-      );
+      toast.error("Não foi possível salvar sua solicitação. Tente novamente.");
     }
   }
+
+  async function onFormSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (step < 3) {
+      const valid = await trigger(STEP_FIELDS[step - 1]);
+      if (valid) setStep(step + 1);
+      return;
+    }
+
+    await handleSubmit(onSubmit)(event);
+  }
+
   return (
     <>
-      <section className={`${s.card} ${s.progress}`}>
-        <div className={s.row}>
+      <ProgressCard>
+        <ProgressRow>
           <span>
-            <span className={`${s.badge} ${s.mint}`}>PROCESSO</span> Adoção
-            responsável de {pet.name}
+            <Badge>PROCESSO</Badge> Adoção responsável de {pet.name}
           </span>
           <strong>Etapa {step} de 3</strong>
-        </div>
-        <ol>
-          {["Dados Pessoais", "Questionário", "Assinatura de Termo"].map(
-            (label, i) => (
-              <li
+        </ProgressRow>
+
+        <Steps aria-label="Etapas da adoção">
+          {STEPS.map((label, index) => {
+            const number = index + 1;
+
+            return (
+              <Step
                 key={label}
-                aria-current={step === i + 1 ? "step" : undefined}
-                className={step >= i + 1 ? s.currentStep : ""}
+                active={step >= number}
+                aria-current={step === number ? "step" : undefined}
               >
-                <span>{step > i + 1 ? <Check size={12} /> : i + 1}</span>
+                <StepNumber>
+                  {step > number ? <Check size={12} aria-hidden /> : number}
+                </StepNumber>
                 {label}
-              </li>
-            ),
-          )}
-        </ol>
-      </section>
-      <div className={s.adoptionLayout}>
-        <aside className={`${s.card} ${s.adoptionPet}`}>
-          <div className={s.summaryPhoto} />
-          <h2>{pet.name}</h2>
-          <p>
+              </Step>
+            );
+          })}
+        </Steps>
+      </ProgressCard>
+
+      <Layout>
+        <PetCard>
+          <PetPhoto aria-hidden />
+          <PetName>{pet.name}</PetName>
+          <PetMeta>
             {pet.breed} • {pet.sex} • {pet.age}
-          </p>
-          <p>
-            <Building2 size={12} />
+          </PetMeta>
+          <PetMeta>
+            <Building2 size={12} aria-hidden />
             {pet.organization}
-          </p>
-          <hr />
-          <small>
+          </PetMeta>
+          <PetDivider />
+          <PetNote>
             O envio deste formulário inicia o processo oficial de adoção
             responsável no PetHub.
-          </small>
-        </aside>
-        <section className={`${s.card} ${s.formPanel}`}>
+          </PetNote>
+        </PetCard>
+
+        <FormPanel>
           {done ? (
-            <div role="status">
-              <h2>Solicitação enviada!</h2>
+            <div role="status" aria-live="polite">
+              <FormTitle>Solicitação enviada!</FormTitle>
               <p>
                 Sua solicitação de adoção de {pet.name} foi salva neste
                 navegador. Acompanhe pelo card “Minhas adoções” na página
                 inicial.
               </p>
-              <p className={s.muted}>
+              <Muted>
                 Demonstração: nenhum dado foi enviado a uma organização.
-              </p>
+              </Muted>
             </div>
           ) : (
-            <form onSubmit={submit}>
-              <h2>
-                {step === 1
-                  ? "Dados Pessoais"
-                  : step === 2
-                    ? "Questionário de Habitação e Rotina"
-                    : "Termo de Adoção Responsável"}
-              </h2>
+            <form onSubmit={onFormSubmit} noValidate>
+              <FormTitle>{STEP_TITLES[step - 1]}</FormTitle>
+
               {step === 1 && (
-                <div className={s.formGrid}>
-                  {field("name", "Nome completo")}
-                  {field("email", "E-mail")}
-                  {field("phone", "Telefone")}
-                  {field("address", "Endereço completo")}
-                </div>
+                <FormGrid>
+                  <Field>
+                    <Label htmlFor="name">Nome completo</Label>
+                    <Input
+                      variant="compact"
+                      id="name"
+                      error={errors.name?.message}
+                      {...register("name")}
+                    />
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="email">E-mail</Label>
+                    <Input
+                      variant="compact"
+                      id="email"
+                      type="email"
+                      error={errors.email?.message}
+                      {...register("email")}
+                    />
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="phone">Telefone</Label>
+                    <Input
+                      variant="compact"
+                      id="phone"
+                      type="tel"
+                      placeholder="(00) 00000-0000"
+                      error={errors.phone?.message}
+                      {...register("phone")}
+                    />
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="address">Endereço completo</Label>
+                    <Input
+                      variant="compact"
+                      id="address"
+                      error={errors.address?.message}
+                      {...register("address")}
+                    />
+                  </Field>
+                </FormGrid>
               )}
+
               {step === 2 && (
                 <>
-                  <div className={s.formGrid}>
-                    {field("home", "Tipo de Residência", [
-                      "Casa",
-                      "Apartamento",
-                      "Outro",
-                    ])}
-                    {field("yard", "Possui Quintal Cercado?", [
-                      "Sim, espaço seguro",
-                      "Não",
-                      "Não se aplica",
-                    ])}
-                    {field("otherPets", "Possui outros animais atualmente?", [
-                      "Não",
-                      "Sim, 1 cachorro",
-                      "Sim, 1 gato",
-                      "Sim, mais de um animal",
-                    ])}
-                    {field("residents", "Número de moradores na residência", [
-                      "1 pessoa",
-                      "2 pessoas",
-                      "3 pessoas",
-                      "4 ou mais pessoas",
-                    ])}
-                  </div>
-                  <label>
-                    Por que você deseja adotar o {pet.name}?
+                  <FormGrid>
+                    {SELECT_FIELDS.map(
+                      ({ name: fieldName, label, options }) => (
+                        <Field key={fieldName}>
+                          <Label htmlFor={fieldName}>{label}</Label>
+                          <Select
+                            id={fieldName}
+                            error={errors[fieldName]?.message}
+                            {...register(fieldName)}
+                          >
+                            {options.map((option) => (
+                              <option key={option} value={option}>
+                                {option}
+                              </option>
+                            ))}
+                          </Select>
+                        </Field>
+                      ),
+                    )}
+                  </FormGrid>
+
+                  <Field>
+                    <Label htmlFor="reason">
+                      Por que você deseja adotar o {pet.name}?
+                    </Label>
                     <Textarea
-                      required
-                      minLength={20}
-                      value={values.reason}
-                      onChange={(e) =>
-                        setValues({ ...values, reason: e.target.value })
-                      }
+                      id="reason"
                       placeholder="Conte sobre sua rotina e como pretende cuidar do animal."
+                      error={errors.reason?.message}
+                      {...register("reason")}
                     />
-                  </label>
-                  <div className={s.visitRow}>
-                    <strong>
+                  </Field>
+
+                  <SwitchRow>
+                    <strong id="visits-label">
                       Disponibilidade para receber visita pré-adoção da ONG?
                     </strong>
-                    <button
+                    <Switch
                       type="button"
                       role="switch"
                       aria-checked={visits}
-                      aria-label="Disponível para visita pré-adoção"
-                      className={`${s.switch} ${visits ? s.switchOn : ""}`}
-                      onClick={() => setVisits(!visits)}
+                      aria-labelledby="visits-label"
+                      checked={visits}
+                      onClick={() => setValue("visits", !visits)}
                     >
                       <span />
-                    </button>
-                  </div>
+                    </Switch>
+                  </SwitchRow>
                 </>
               )}
+
               {step === 3 && (
                 <>
-                  <div className={s.term}>
+                  <Term>
                     <p>
-                      Eu, <strong>{values.name}</strong>, solicito a adoção de{" "}
+                      Eu, <strong>{name}</strong>, solicito a adoção de{" "}
                       <strong>{pet.name}</strong> e me comprometo a oferecer
                       alimentação adequada, abrigo seguro, cuidados veterinários
                       e atenção ao bem-estar do animal.
@@ -249,42 +388,67 @@ export default function AdoptionForm({ pet }: { pet: Pet }) {
                       Este formulário é demonstrativo e não constitui assinatura
                       de um contrato definitivo.
                     </p>
-                  </div>
-                  <label className={s.checkbox}>
-                    <input type="checkbox" required />
-                    Li e concordo com os compromissos de adoção responsável.
-                  </label>
-                  {field(
-                    "signature",
-                    "Digite seu nome completo para confirmar",
-                  )}
+                  </Term>
+
+                  <Field>
+                    <Checkbox htmlFor="acceptedCommitment">
+                      <input
+                        id="acceptedCommitment"
+                        type="checkbox"
+                        {...register("acceptedCommitment")}
+                      />
+                      <span>
+                        Li e concordo com os compromissos de adoção responsável.
+                      </span>
+                    </Checkbox>
+                    {errors.acceptedCommitment && (
+                      <ErrorMessage>
+                        {errors.acceptedCommitment.message}
+                      </ErrorMessage>
+                    )}
+                  </Field>
+
+                  <Field>
+                    <Label htmlFor="signature">
+                      Digite seu nome completo para confirmar
+                    </Label>
+                    <Input
+                      variant="compact"
+                      id="signature"
+                      error={errors.signature?.message}
+                      {...register("signature")}
+                    />
+                  </Field>
                 </>
               )}
-              {error && (
-                <p role="alert" className={s.error}>
-                  {error}
-                </p>
-              )}
-              <div className={s.formActions}>
+
+              <Actions>
                 {step > 1 ? (
-                  <button
-                    type="button"
-                    className={s.outline}
+                  <Button
+                    variant="secondary"
+                    fullWidth={false}
                     onClick={() => setStep(step - 1)}
                   >
                     Voltar
-                  </button>
+                  </Button>
                 ) : (
                   <span />
                 )}
-                <button className={s.primary} type="submit">
+
+                <Button
+                  variant="primary"
+                  type="submit"
+                  fullWidth={false}
+                  isLoading={isSubmitting}
+                  loadingLabel="Enviando..."
+                >
                   {step === 3 ? "Enviar solicitação" : "Próximo Passo"}
-                </button>
-              </div>
+                </Button>
+              </Actions>
             </form>
           )}
-        </section>
-      </div>
+        </FormPanel>
+      </Layout>
     </>
   );
 }

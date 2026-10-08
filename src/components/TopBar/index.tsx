@@ -2,18 +2,32 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
+
 import { LogOut, Menu, X } from "lucide-react";
+
 import Button from "@/components/Button";
-import { toast } from "@/components/Toast";
 import Logo from "@/components/Logo";
-import UserCard from "@/components/UserCard";
 import NavigationLinks from "@/components/NavigationLinks";
+import { toast } from "@/components/Toast";
+import UserCard from "@/components/UserCard";
 import {
-  useAuth,
-  PUBLIC_HOME,
   AUTHENTICATED_HOME,
+  PUBLIC_HOME,
+  useAuth,
 } from "@/contexts/AuthContext";
-import { topBarStyles } from "./styles";
+
+import {
+  Actions,
+  Dropdown,
+  DropdownItem,
+  Header,
+  Inner,
+  Left,
+  MenuToggle,
+  MobileMenu,
+  Nav,
+  Organizer,
+} from "./styles";
 
 function subscribeProfile(callback: () => void) {
   window.addEventListener("storage", callback);
@@ -23,6 +37,7 @@ function subscribeProfile(callback: () => void) {
     window.removeEventListener("pethub:profile-updated", callback);
   };
 }
+
 function getProfileSnapshot() {
   try {
     return localStorage.getItem("pethub:profile") || "";
@@ -34,34 +49,42 @@ function getProfileSnapshot() {
 // Organismo compartilhado: sessão, conta e navegação têm uma única fonte.
 export default function TopBar() {
   const router = useRouter();
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated: authenticated, logout } = useAuth();
+
   const profileSnapshot = useSyncExternalStore(
     subscribeProfile,
     getProfileSnapshot,
     () => "",
   );
+
   let name = user?.name ?? "Usuário";
   try {
     const profile = JSON.parse(profileSnapshot);
     if (typeof profile?.name === "string") name = profile.name;
-  } catch {}
-  const authenticated = isAuthenticated;
+  } catch {
+    // perfil inválido no localStorage: mantém o nome da sessão
+  }
+
   const accountRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
 
   useEffect(() => {
     if (!accountOpen && !menuOpen) return;
+
     function closeOnEscape(event: KeyboardEvent) {
       if (event.key === "Escape") {
         setAccountOpen(false);
         setMenuOpen(false);
       }
     }
+
     function closeAccount(event: PointerEvent) {
-      if (!accountRef.current?.contains(event.target as Node))
+      if (!accountRef.current?.contains(event.target as Node)) {
         setAccountOpen(false);
+      }
     }
+
     document.addEventListener("keydown", closeOnEscape);
     document.addEventListener("pointerdown", closeAccount);
     return () => {
@@ -70,62 +93,72 @@ export default function TopBar() {
     };
   }, [accountOpen, menuOpen]);
 
+  async function handleLogout() {
+    setAccountOpen(false);
+    setMenuOpen(false);
+
+    try {
+      await logout();
+      router.replace("/login");
+      router.refresh();
+    } catch {
+      toast.error("Não foi possível sair. Tente novamente.");
+    }
+  }
+
   return (
-    <header className={`${topBarStyles()} topbar`}>
-      <div className="topbar-inner">
-        <div className="topbar-left">
+    <Header>
+      <Inner>
+        <Left>
           {authenticated && (
-            <button
+            <MenuToggle
               type="button"
-              className="topbar-toggle"
               aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
               aria-expanded={menuOpen}
               aria-controls="topbar-mobile-menu"
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+              {menuOpen ? (
+                <X size={20} aria-hidden />
+              ) : (
+                <Menu size={20} aria-hidden />
+              )}
+            </MenuToggle>
           )}
           <Logo href={authenticated ? AUTHENTICATED_HOME : PUBLIC_HOME} />
-        </div>
+        </Left>
+
         {authenticated && (
-          <div className="topbar-nav">
+          <Nav>
             <NavigationLinks />
-          </div>
+          </Nav>
         )}
-        <div className="topbar-actions" ref={accountRef}>
+
+        <Actions ref={accountRef}>
           {authenticated ? (
             <>
               <UserCard
                 variant="compact"
                 name={name}
-                role={user?.role === "organization" ? "ONG / Protetor" : "Adotante"}
+                role={
+                  user?.role === "organization" ? "ONG / Protetor" : "Adotante"
+                }
                 aria-haspopup="menu"
                 aria-expanded={accountOpen}
                 onClick={() => setAccountOpen(!accountOpen)}
               />
+
               {accountOpen && (
-                <div className="topbar-dropdown" role="menu">
-                  <button
+                <Dropdown role="menu">
+                  <DropdownItem
                     type="button"
                     role="menuitem"
-                    className="topbar-dropdown-item"
-                    onClick={async () => {
-                      setAccountOpen(false);
-                      setMenuOpen(false);
-                      try {
-                        await logout();
-                        router.replace("/login");
-                        router.refresh();
-                      } catch {
-                        toast.error("Não foi possível sair. Tente novamente.");
-                      }
-                    }}
+                    onClick={handleLogout}
                   >
                     <LogOut size={16} aria-hidden />
                     Sair
-                  </button>
-                </div>
+                  </DropdownItem>
+                </Dropdown>
               )}
             </>
           ) : (
@@ -138,7 +171,8 @@ export default function TopBar() {
               >
                 Entrar
               </Button>
-              <span className="topbar-organizer">
+
+              <Organizer>
                 <Button
                   size="sm"
                   variant="secondary"
@@ -147,19 +181,20 @@ export default function TopBar() {
                 >
                   Entrar como Organizador
                 </Button>
-              </span>
+              </Organizer>
             </>
           )}
-        </div>
-      </div>
+        </Actions>
+      </Inner>
+
       {authenticated && menuOpen && (
-        <div id="topbar-mobile-menu" className="topbar-mobile">
+        <MobileMenu id="topbar-mobile-menu">
           <NavigationLinks
             orientation="vertical"
             onNavigate={() => setMenuOpen(false)}
           />
-        </div>
+        </MobileMenu>
       )}
-    </header>
+    </Header>
   );
 }
