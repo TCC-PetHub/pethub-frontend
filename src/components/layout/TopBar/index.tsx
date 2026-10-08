@@ -1,22 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import { LogOut, Menu, User, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 
 import Button from "@/components/common/Button";
 import Logo from "@/components/common/Logo";
 import { toast } from "@/components/common/Toast";
 import UserCard from "@/components/common/UserCard";
 import NavigationLinks from "@/components/navigation/NavigationLinks";
-import {
-  homeByRole,
-  navigationByRole,
-  profileByRole,
-  roleLabel,
-} from "@/config/navigation";
+import { homeByRole, navigationByRole, roleLabel } from "@/config/navigation";
 import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
 
 import {
@@ -70,8 +64,6 @@ export default function TopBar() {
 
   const role = user?.role ?? "adopter";
   const items = navigationByRole[role] ?? navigationByRole.adopter;
-  const profileHref = profileByRole[role] ?? profileByRole.adopter;
-
   const accountRef = useRef<HTMLDivElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -159,19 +151,6 @@ export default function TopBar() {
 
               {accountOpen && (
                 <Dropdown role="menu">
-                  <DropdownItem
-                    as={Link}
-                    href={profileHref}
-                    role="menuitem"
-                    onClick={() => {
-                      setAccountOpen(false);
-                      setMenuOpen(false);
-                    }}
-                  >
-                    <User size={16} aria-hidden />
-                    Meu perfil
-                  </DropdownItem>
-
                   <DropdownItem
                     type="button"
                     role="menuitem"
