@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+A autenticação usa sessões JWT assinadas em formato JWS. Para testar localmente, execute `npm run auth:setup-dev`; a credencial fictícia fica em `.env.local`. A conta local não funciona em produção. Veja [a documentação de autenticação](src/lib/auth/README.md) para configurar a API futura e executar `npm run test:auth`.
+
 First, run the development server:
 
 ```bash

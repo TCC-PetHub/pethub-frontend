@@ -5,10 +5,10 @@ import { ArrowLeft, PawPrint } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import { toast } from "@/components/common/Toast";
-import Logo from "@/components/common/Logo";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
+import { toast } from "@/components/atoms/Toast";
+import Logo from "@/components/atoms/Logo";
 import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
 
 import {
@@ -22,11 +22,7 @@ import {
   Field,
   Form,
   Label,
-  resetGlobal,
-} from "./style";
-
-
-resetGlobal();
+} from "./styles";
 
 const forgotPasswordSchema = z.object({
   email: z

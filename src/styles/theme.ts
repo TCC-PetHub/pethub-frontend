@@ -1,94 +1,124 @@
 import { createStitches } from "@stitches/react";
 
-export const { styled, css, globalCss, keyframes, createTheme, theme } =
-  createStitches({
-    theme: {
-      colors: {
-        // Base
-        text: "#0F172A",
-        textSecondary: "#475569",
-        textMuted: "#64748B",
-
-        background: "#FFFFFF",
-        backgroundSecondary: "#F1F5F9",
-        border: "#E2E8F0",
-
-        // Cores principais
-        primary: "#115E59",
-        primaryLight: "#0D9488",
-        warning: "#F59E0B",
-
-        // Status
-        negative: "#EF4444",
-        negativeBackground: "#FEE2E2",
-
-        positive: "#10B981",
-        positiveBackground: "#D1FAE5",
-
-        inTreatment: "#D97706",
-        inTreatmentBackground: "#FEF3C7",
-
-        available: "#059669",
-
-        // Adoção
-        adoptedBackground: "#CCFBF1",
-
-        // Gênero
-        male: "#1D4ED8",
-        maleBackground: "#DBEAFE",
-
-        female: "#BE185D",
-        femaleBackground: "#FCE7F3",
-
-        // Idade
-        age: "#115E59",
-        ageBackground: "#CCFBF1",
-      },
-
-      fonts: {
-        sans: "Arial, Helvetica, sans-serif",
-        mono: "monospace",
-      },
-
-      fontSizes: {
-        xs: "0.75rem",
-        sm: "0.875rem",
-        md: "1rem",
-        lg: "1.125rem",
-        xl: "1.25rem",
-        "2xl": "1.5rem",
-        "3xl": "1.875rem",
-        "4xl": "2.25rem",
-      },
-
-      space: {
-        xs: "4px",
-        sm: "8px",
-        md: "16px",
-        lg: "24px",
-        xl: "32px",
-        "2xl": "48px",
-        "3xl": "64px",
-      },
-
-      radii: {
-        sm: "4px",
-        md: "8px",
-        lg: "12px",
-        full: "9999px",
-      },
-
-      shadows: {
-        sm: "0 1px 2px rgba(15, 23, 42, 0.05)",
-        md: "0 4px 6px rgba(15, 23, 42, 0.08)",
-        lg: "0 10px 15px rgba(15, 23, 42, 0.10)",
-      },
+// Alias tipados para os tokens definidos em app/globals.css.
+export const {
+  styled,
+  css,
+  globalCss,
+  keyframes,
+  createTheme,
+  theme,
+  getCssText,
+} = createStitches({
+  theme: {
+    colors: {
+      text: "var(--pethub-colors-text)",
+      textSecondary: "var(--pethub-colors-textSecondary)",
+      textMuted: "var(--pethub-colors-textMuted)",
+      background: "var(--pethub-colors-background)",
+      backgroundSecondary: "var(--pethub-colors-backgroundSecondary)",
+      border: "var(--pethub-colors-border)",
+      primary: "var(--pethub-colors-primary)",
+      primaryLight: "var(--pethub-colors-primaryLight)",
+      warning: "var(--pethub-colors-warning)",
+      negative: "var(--pethub-colors-negative)",
+      negativeBackground: "var(--pethub-colors-negativeBackground)",
+      positive: "var(--pethub-colors-positive)",
+      positiveBackground: "var(--pethub-colors-positiveBackground)",
+      inTreatment: "var(--pethub-colors-inTreatment)",
+      inTreatmentBackground: "var(--pethub-colors-inTreatmentBackground)",
+      available: "var(--pethub-colors-available)",
+      adoptedBackground: "var(--pethub-colors-adoptedBackground)",
+      male: "var(--pethub-colors-male)",
+      maleBackground: "var(--pethub-colors-maleBackground)",
+      female: "var(--pethub-colors-female)",
+      femaleBackground: "var(--pethub-colors-femaleBackground)",
+      age: "var(--pethub-colors-age)",
+      ageBackground: "var(--pethub-colors-ageBackground)",
+      backgroundPage: "var(--pethub-colors-backgroundPage)",
+      primaryHover: "var(--pethub-colors-primaryHover)",
+      textSubtle: "var(--pethub-colors-textSubtle)",
+      borderStrong: "var(--pethub-colors-borderStrong)",
+      backgroundMint: "var(--pethub-colors-backgroundMint)",
+      primaryBorder: "var(--pethub-colors-primaryBorder)",
+      focus: "var(--pethub-colors-focus)",
+      positiveDark: "var(--pethub-colors-positiveDark)",
+      positiveSoft: "var(--pethub-colors-positiveSoft)",
+      pending: "var(--pethub-colors-pending)",
+      pendingBackground: "var(--pethub-colors-pendingBackground)",
+      negativeStrong: "var(--pethub-colors-negativeStrong)",
+      footerBorder: "var(--pethub-colors-footerBorder)",
+      overlay: "var(--pethub-colors-overlay)",
+      shadowCard: "var(--pethub-colors-shadowCard)",
+      shadowDialog: "var(--pethub-colors-shadowDialog)",
+      shadowSwitch: "var(--pethub-colors-shadowSwitch)",
+      googleBlue: "var(--pethub-colors-googleBlue)",
+      googleGreen: "var(--pethub-colors-googleGreen)",
+      googleYellow: "var(--pethub-colors-googleYellow)",
+      googleRed: "var(--pethub-colors-googleRed)",
     },
-
-    media: {
-      sm: "(min-width: 640px)",
-      md: "(min-width: 768px)",
-      lg: "(min-width: 1024px)",
-      xl: "(min-width: 1280px)",
+    fonts: {
+      sans: "var(--pethub-fonts-sans)",
+      mono: "var(--pethub-fonts-mono)",
     },
-  });
+    fontSizes: {
+      display: "var(--pethub-fontSizes-display)",
+      xs: "var(--pethub-fontSizes-xs)",
+      sm: "var(--pethub-fontSizes-sm)",
+      md: "var(--pethub-fontSizes-md)",
+      lg: "var(--pethub-fontSizes-lg)",
+      xl: "var(--pethub-fontSizes-xl)",
+      "2xl": "var(--pethub-fontSizes-2xl)",
+      "3xl": "var(--pethub-fontSizes-3xl)",
+      "4xl": "var(--pethub-fontSizes-4xl)",
+      size10: "var(--pethub-fontSizes-size10)",
+      size13: "var(--pethub-fontSizes-size13)",
+      size11: "var(--pethub-fontSizes-size11)",
+      size22: "var(--pethub-fontSizes-size22)",
+      size9: "var(--pethub-fontSizes-size9)",
+      size23: "var(--pethub-fontSizes-size23)",
+      size27: "var(--pethub-fontSizes-size27)",
+      size15: "var(--pethub-fontSizes-size15)",
+      size21: "var(--pethub-fontSizes-size21)",
+    },
+    space: {
+      xs: "var(--pethub-space-xs)",
+      sm: "var(--pethub-space-sm)",
+      md: "var(--pethub-space-md)",
+      lg: "var(--pethub-space-lg)",
+      xl: "var(--pethub-space-xl)",
+      "2xl": "var(--pethub-space-2xl)",
+      "3xl": "var(--pethub-space-3xl)",
+    },
+    radii: {
+      sm: "var(--pethub-radii-sm)",
+      md: "var(--pethub-radii-md)",
+      lg: "var(--pethub-radii-lg)",
+      full: "var(--pethub-radii-full)",
+      control: "var(--pethub-radii-control)",
+      input: "var(--pethub-radii-input)",
+      panel: "var(--pethub-radii-panel)",
+      pill: "var(--pethub-radii-pill)",
+      profile: "var(--pethub-radii-profile)",
+      circle: "var(--pethub-radii-circle)",
+    },
+    shadows: {
+      sm: "var(--pethub-shadows-sm)",
+      md: "var(--pethub-shadows-md)",
+      lg: "var(--pethub-shadows-lg)",
+      card: "var(--pethub-shadows-card)",
+      switch: "var(--pethub-shadows-switch)",
+      dialog: "var(--pethub-shadows-dialog)",
+      focus: "var(--pethub-shadows-focus)",
+      focusMint: "var(--pethub-shadows-focusMint)",
+      focusSoft: "var(--pethub-shadows-focusSoft)",
+      focusNegative: "var(--pethub-shadows-focusNegative)",
+    },
+  },
+  media: {
+    sm: "(min-width: 640px)",
+    md: "(min-width: 768px)",
+    lg: "(min-width: 1024px)",
+    xl: "(min-width: 1280px)",
+  },
+});

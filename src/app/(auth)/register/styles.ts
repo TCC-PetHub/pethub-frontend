@@ -52,14 +52,14 @@ export const Field = styled("div", {
 
 export const Label = styled("label", {
   color: "$text",
-  fontSize: 13,
+  fontSize: "var(--fontSizes-size13)",
   fontWeight: 600,
 });
 
 export const Hint = styled("p", {
   margin: 0,
   color: "$textMuted",
-  fontSize: 11,
+  fontSize: "var(--fontSizes-size11)",
 });
 
 export const ErrorMessage = styled("p", {
@@ -81,7 +81,7 @@ export const TypeOption = styled("button", {
   backgroundColor: "$background",
   color: "$textSecondary",
   fontFamily: "inherit",
-  fontSize: 13,
+  fontSize: "var(--fontSizes-size13)",
   fontWeight: 500,
   cursor: "pointer",
   transition: "all 200ms ease",
@@ -92,7 +92,7 @@ export const TypeOption = styled("button", {
 
   "&:focus-visible": {
     outline: "none",
-    boxShadow: "0 0 0 3px $colors$primaryLight",
+    boxShadow: "var(--shadows-focus)",
   },
 
   variants: {
@@ -123,7 +123,7 @@ export const Consent = styled("label", {
   alignItems: "flex-start",
   gap: "$sm",
   color: "$textSecondary",
-  fontSize: 11,
+  fontSize: "var(--fontSizes-size11)",
   lineHeight: 1.5,
   cursor: "pointer",
 
@@ -151,7 +151,7 @@ export const Consent = styled("label", {
 
     "&:focus-visible": {
       outline: "none",
-      boxShadow: "0 0 0 3px $colors$adoptedBackground",
+      boxShadow: "var(--shadows-focusMint)",
     },
   },
 
@@ -186,7 +186,7 @@ export const PendingIcon = styled("span", {
   justifyContent: "center",
   width: 96,
   height: 96,
-  borderRadius: "50%",
+  borderRadius: "var(--radii-circle)",
   backgroundColor: "$adoptedBackground",
   color: "$primary",
 
@@ -202,7 +202,7 @@ export const PendingIcon = styled("span", {
 export const PendingTitle = styled("h2", {
   margin: 0,
   color: "$text",
-  fontSize: 18,
+  fontSize: "var(--fontSizes-lg)",
   fontWeight: 700,
 });
 
@@ -210,7 +210,7 @@ export const PendingText = styled("p", {
   margin: 0,
   maxWidth: 300,
   color: "$textSecondary",
-  fontSize: 13,
+  fontSize: "var(--fontSizes-size13)",
   lineHeight: 1.6,
 });
 
@@ -220,7 +220,7 @@ export const BackLink = styled(Link, {
   border: "1px solid $primaryLight",
   borderRadius: "$lg",
   color: "$primary",
-  fontSize: 13,
+  fontSize: "var(--fontSizes-size13)",
   fontWeight: 600,
   textDecoration: "none",
   transition: "all 200ms ease",
@@ -231,6 +231,6 @@ export const BackLink = styled(Link, {
 
   "&:focus-visible": {
     outline: "none",
-    boxShadow: "0 0 0 3px $colors$primaryLight",
+    boxShadow: "var(--shadows-focus)",
   },
 });

@@ -7,19 +7,12 @@ import { useRouter } from "next/navigation";
 
 import { ArrowRight, Heart, MapPin, PawPrint, Search } from "lucide-react";
 
-import Button from "@/components/common/Button";
-import Input from "@/components/common/Input";
-import Logo from "@/components/common/Logo";
-import TopBar from "@/components/navigation/TopBar";
-import { useAuth, useHomeHref } from "@/contexts/AuthContext";
-import {
-  ANIMALS,
-  CAMPAIGNS,
-  FILTERS,
-  MOCK_ADOPTER,
-  MOCK_NAV_ITEMS,
-  PARTNERS,
-} from "@/mocks/pethub";
+import Button from "@/components/atoms/Button";
+import Input from "@/components/atoms/Input";
+import Logo from "@/components/atoms/Logo";
+import TopBar from "@/components/organisms/TopBar";
+import { useHomeHref } from "@/contexts/AuthContext";
+import { ANIMALS, CAMPAIGNS, FILTERS, PARTNERS } from "@/mocks/pethub";
 
 import {
   AnimalPhoto,
@@ -60,10 +53,7 @@ import {
   SeeAll,
   Tag,
   TagRow,
-  resetGlobal,
 } from "./styles";
-
-resetGlobal();
 
 const currency = new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -74,7 +64,6 @@ const currency = new Intl.NumberFormat("pt-BR", {
 export default function HomePage() {
   const router = useRouter();
   const homeHref = useHomeHref();
-  const { isAuthenticated, logout } = useAuth();
 
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState<string[]>([]);
@@ -99,12 +88,7 @@ export default function HomePage() {
 
   return (
     <Page>
-      <TopBar
-        variant={isAuthenticated ? "authenticated" : "public"}
-        user={MOCK_ADOPTER}
-        navItems={MOCK_NAV_ITEMS}
-        onLogout={logout}
-      />
+      <TopBar />
 
       <main>
         <Hero>
@@ -151,7 +135,7 @@ export default function HomePage() {
           </Inner>
         </Hero>
 
-        <Section tone="mint">
+        <Section id="campanhas" tone="mint">
           <Inner>
             <SectionHeader>
               <div>
@@ -221,7 +205,7 @@ export default function HomePage() {
           </Inner>
         </Section>
 
-        <Section>
+        <Section id="animais">
           <Inner>
             <SectionHeader>
               <div>
@@ -268,7 +252,7 @@ export default function HomePage() {
           </Inner>
         </Section>
 
-        <Section style={{ paddingTop: 0 }}>
+        <Section id="parceiros" style={{ paddingTop: 0 }}>
           <Inner>
             <SectionHeader>
               <div>
@@ -309,20 +293,36 @@ export default function HomePage() {
             <nav aria-label="Encontre">
               <FooterTitle>Encontre</FooterTitle>
               <FooterList>
-                <li><Link href="/animais?filtros=Cães">Adoção de cães</Link></li>
-                <li><Link href="/animais?filtros=Gatos">Adoção de gatos</Link></li>
-                <li><Link href="/perdidos">Perdidos e achados</Link></li>
-                <li><Link href="/ongs">ONGs cadastradas</Link></li>
+                <li>
+                  <Link href="/animais?filtros=Cães">Adoção de cães</Link>
+                </li>
+                <li>
+                  <Link href="/animais?filtros=Gatos">Adoção de gatos</Link>
+                </li>
+                <li>
+                  <Link href="/perdidos">Perdidos e achados</Link>
+                </li>
+                <li>
+                  <Link href="/ongs">ONGs cadastradas</Link>
+                </li>
               </FooterList>
             </nav>
 
             <nav aria-label="Parceiros">
               <FooterTitle>Parceiros</FooterTitle>
               <FooterList>
-                <li><Link href="/cadastro-ong">Cadastrar minha ONG</Link></li>
-                <li><Link href="/doacoes">Portal de doações</Link></li>
-                <li><Link href="/termos-adocao">Termos de adoção</Link></li>
-                <li><Link href="/suporte">Suporte técnico</Link></li>
+                <li>
+                  <Link href="/cadastro-ong">Cadastrar minha ONG</Link>
+                </li>
+                <li>
+                  <Link href="/doacoes">Portal de doações</Link>
+                </li>
+                <li>
+                  <Link href="/termos-adocao">Termos de adoção</Link>
+                </li>
+                <li>
+                  <Link href="/suporte">Suporte técnico</Link>
+                </li>
               </FooterList>
             </nav>
 
