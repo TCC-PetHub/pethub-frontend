@@ -1,555 +1,511 @@
-import { css } from "@/styles";
+import { styled } from "@/styles";
 
-export const userStyles = css({
-  "&": {
-    minHeight: "100vh",
-    background: "var(--colors-backgroundPage)",
-    color: "var(--colors-text)",
-    fontFamily: "var(--fonts-sans)",
-  },
-  ".main": {
-    maxWidth: "1120px",
-    margin: "auto",
+/* -------------------------------------------------------------------------- */
+/* Layout                                                                     */
+/* -------------------------------------------------------------------------- */
+
+export const Page = styled("div", {
+  minHeight: "100vh",
+  backgroundColor: "$backgroundPage",
+  color: "$text",
+  fontFamily: "$sans",
+});
+
+export const Main = styled("main", {
+  maxWidth: 1120,
+  margin: "0 auto",
+  padding: "24px 16px 48px",
+
+  "@sm": {
     padding: "40px 32px 80px",
   },
-  ".card": {
-    background: "var(--colors-background)",
-    border: "1px solid var(--colors-border)",
-    borderRadius: "var(--radii-lg)",
-    boxShadow: "var(--shadows-card)",
-  },
-  ".profile": {
-    display: "flex",
-    alignItems: "center",
-    gap: "24px",
-    padding: "32px 24px",
-    marginBottom: "24px",
-    minHeight: "124px",
-  },
-  ".avatarSpace": {
-    width: "68px",
-    flexShrink: "0",
-  },
-  ".identity": {
-    flex: "1",
-    minWidth: "0",
-  },
-  ".nameRow": {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    flexWrap: "wrap",
-  },
-  ".nameRow h1": {
-    fontSize: "var(--fontSizes-size22)",
-    margin: "0",
-  },
-  ".verified": {
-    background: "var(--colors-adoptedBackground)",
-    color: "var(--colors-primary)",
-    borderRadius: "var(--radii-control)",
-    fontSize: "var(--fontSizes-size10)",
-    fontWeight: "600",
-    padding: "4px 7px",
-  },
-  ".contacts": {
-    display: "flex",
-    gap: "18px",
-    flexWrap: "wrap",
-    color: "var(--colors-textMuted)",
-    fontSize: "var(--fontSizes-size11)",
-    marginTop: "10px",
-  },
-  ".contacts span": {
-    display: "flex",
-    alignItems: "center",
-    gap: "7px",
-  },
-  ".contacts svg": {
-    width: "13px",
-    height: "13px",
-  },
-  ".secondary,\n.primary": {
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "7px",
-    fontSize: "var(--fontSizes-size11)",
-    fontWeight: "600",
-    padding: "8px 12px",
-    border: "1px solid var(--colors-border)",
-    borderRadius: "var(--radii-control)",
-    background: "var(--colors-background)",
-    color: "var(--colors-textSecondary)",
-    whiteSpace: "nowrap",
-  },
-  ".primary": {
-    background: "var(--colors-primaryLight)",
-    borderColor: "var(--colors-primaryLight)",
-    color: "var(--colors-background)",
-  },
-  ".secondary:hover": {
-    background: "var(--colors-backgroundSecondary)",
-  },
-  ".primary:hover": {
-    background: "var(--colors-primaryHover)",
-  },
-  ".dashboard": {
-    display: "grid",
-    gridTemplateColumns: "2.15fr 1fr",
-    gap: "20px",
-  },
-  ".leftColumn,\n.rightColumn": {
-    display: "flex",
-    flexDirection: "column",
-    gap: "18px",
-  },
-  ".stats": {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "16px",
-  },
-  ".stat": {
-    padding: "20px",
-    minHeight: "116px",
-  },
-  ".statLabel": {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    color: "var(--colors-textMuted)",
-    fontSize: "var(--fontSizes-size11)",
-    fontWeight: "600",
-  },
-  ".statLabel svg": {
-    color: "var(--colors-primaryLight)",
-  },
-  ".statValue": {
-    display: "flex",
-    alignItems: "baseline",
-    gap: "10px",
-    margin: "8px 0",
-  },
-  ".statValue strong": {
-    fontSize: "var(--fontSizes-3xl)",
-  },
-  ".statValue span,\n.stat small": {
-    fontSize: "var(--fontSizes-size10)",
-    color: "var(--colors-textMuted)",
-  },
-  ".stat:hover": {
-    borderColor: "var(--colors-primaryBorder)",
-  },
-  ".notifications": {
-    padding: "22px 20px",
-    display: "flex",
-    alignItems: "center",
-    gap: "24px",
-    justifyContent: "space-between",
-  },
-  ".notifications h2": {
-    fontSize: "var(--fontSizes-xs)",
-    margin: "0 0 5px",
-  },
-  ".notifications p": {
-    fontSize: "var(--fontSizes-size11)",
-    lineHeight: "1.5",
-    color: "var(--colors-textMuted)",
-    margin: "0",
-    maxWidth: "460px",
-  },
-  ".switch": {
-    border: "0",
-    borderRadius: "var(--radii-pill)",
-    background: "var(--colors-border)",
-    width: "38px",
-    height: "20px",
-    padding: "2px",
-    flexShrink: "0",
-  },
-  ".switch span": {
-    display: "block",
-    height: "16px",
-    width: "16px",
-    borderRadius: "var(--radii-circle)",
-    background: "var(--colors-background)",
-    boxShadow: "var(--shadows-switch)",
-    transition: "transform 0.2s",
-  },
-  ".switchOn": {
-    background: "var(--colors-primaryLight)",
-  },
-  ".switchOn span": {
-    transform: "translateX(18px)",
-  },
-  ".panel": {
-    padding: "22px 20px",
-  },
-  ".panel h2": {
-    margin: "0 0 16px",
-    paddingBottom: "14px",
-    borderBottom: "1px solid var(--colors-border)",
-    fontSize: "var(--fontSizes-sm)",
-  },
-  ".preference": {
-    marginTop: "14px",
-  },
-  ".preference h3": {
-    fontSize: "var(--fontSizes-size10)",
-    color: "var(--colors-textMuted)",
-    margin: "0 0 7px",
-  },
-  ".chips": {
-    display: "flex",
-    gap: "6px",
-  },
-  ".chips span": {
-    background: "var(--colors-adoptedBackground)",
-    color: "var(--colors-primary)",
-    borderRadius: "var(--radii-pill)",
-    padding: "5px 10px",
-    fontSize: "var(--fontSizes-size10)",
-    fontWeight: "600",
-  },
-  ".outlineChip": {
-    display: "inline-block",
-    border: "1px solid var(--colors-primaryLight)",
-    borderRadius: "var(--radii-control)",
-    padding: "5px 8px",
-    fontSize: "var(--fontSizes-size11)",
-    color: "var(--colors-primary)",
-  },
-  ".environment": {
-    listStyle: "none",
-    padding: "0",
-    margin: "0",
-    display: "flex",
-    flexDirection: "column",
-    gap: "9px",
-    color: "var(--colors-textMuted)",
-    fontSize: "var(--fontSizes-size11)",
-  },
-  ".environment li": {
-    display: "flex",
-    gap: "7px",
-    alignItems: "flex-start",
-    lineHeight: "1.4",
-  },
-  ".environment svg": {
-    width: "13px",
-    height: "13px",
-    color: "var(--colors-primaryLight)",
-    flexShrink: "0",
-  },
-  ".heading": {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "20px",
-    marginBottom: "24px",
-  },
-  ".heading h1": {
-    fontSize: "var(--fontSizes-xl)",
-    margin: "0 0 6px",
-  },
-  ".heading p": {
-    fontSize: "var(--fontSizes-size11)",
-    color: "var(--colors-textMuted)",
-    margin: "0",
-  },
-  ".filters": {
-    display: "flex",
-    gap: "8px",
-    flexWrap: "wrap",
-  },
-  ".filters button": {
-    border: "1px solid var(--colors-border)",
-    borderRadius: "var(--radii-control)",
-    background: "var(--colors-background)",
-    color: "var(--colors-textMuted)",
-    fontSize: "var(--fontSizes-size11)",
-    padding: "7px 12px",
-  },
-  ".filters .activeFilter": {
-    background: "var(--colors-primaryLight)",
-    color: "var(--colors-background)",
-    borderColor: "var(--colors-primaryLight)",
-  },
-  ".applications": {
-    display: "grid",
-    gridTemplateColumns: "1fr 1fr",
-    gap: "18px",
-  },
-  ".application": {
-    display: "flex",
-    gap: "20px",
-    padding: "16px",
-    minHeight: "154px",
-  },
-  ".petSpace": {
-    width: "102px",
-    flexShrink: "0",
-  },
-  ".applicationBody": {
-    flex: "1",
-    minWidth: "0",
-  },
-  ".applicationTop": {
-    display: "flex",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    gap: "8px",
-  },
-  ".application h2": {
-    fontSize: "var(--fontSizes-md)",
-    margin: "0",
-  },
-  ".badge": {
-    fontSize: "var(--fontSizes-size9)",
-    fontWeight: "600",
-    padding: "4px 6px",
-    borderRadius: "var(--radii-sm)",
-    whiteSpace: "nowrap",
-  },
-  ".analysis": {
-    color: "var(--colors-inTreatment)",
-    background: "var(--colors-inTreatmentBackground)",
-  },
-  ".completed": {
-    color: "var(--colors-background)",
-    background: "var(--colors-positiveDark)",
-  },
-  ".pending": {
-    color: "var(--colors-pending)",
-    background: "var(--colors-pendingBackground)",
-  },
-  ".approved": {
-    color: "var(--colors-available)",
-    background: "var(--colors-positiveBackground)",
-  },
-  ".description": {
-    fontSize: "var(--fontSizes-size10)",
-    color: "var(--colors-primary)",
-    fontWeight: "600",
-    margin: "8px 0",
-  },
-  ".organization": {
-    display: "flex",
-    alignItems: "center",
-    gap: "5px",
-    fontSize: "var(--fontSizes-size10)",
-    color: "var(--colors-textMuted)",
-    margin: "0",
-  },
-  ".application footer": {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: "8px",
-    borderTop: "1px solid var(--colors-border)",
-    marginTop: "30px",
-    paddingTop: "10px",
-  },
-  ".application footer small": {
-    fontSize: "var(--fontSizes-size9)",
-    color: "var(--colors-textSubtle)",
-  },
-  ".application footer > div": {
-    display: "flex",
-    gap: "6px",
-  },
-  ".application footer button": {
-    fontSize: "var(--fontSizes-size10)",
-    padding: "6px 9px",
-  },
-  ".dialog": {
-    width: "calc(100% - 32px)",
-    maxWidth: "460px",
-    padding: "32px",
-    border: "1px solid var(--colors-border)",
-    borderRadius: "var(--radii-lg)",
-    color: "var(--colors-text)",
-    boxShadow: "var(--shadows-dialog)",
-  },
-  ".dialog::backdrop": {
-    background: "var(--colors-overlay)",
-  },
-  ".dialog h2": {
-    fontSize: "var(--fontSizes-xl)",
-    margin: "0 20px 20px 0",
-  },
-  ".dialog p": {
-    fontSize: "var(--fontSizes-sm)",
-    lineHeight: "1.6",
-    color: "var(--colors-textSecondary)",
-  },
-  ".dialog label": {
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    marginBottom: "16px",
-    fontSize: "var(--fontSizes-size13)",
-  },
-  ".close": {
-    position: "absolute",
-    right: "14px",
-    top: "14px",
-    background: "transparent",
-    border: "0",
-    color: "var(--colors-textMuted)",
-  },
-  "& button:focus-visible,\n& a:focus-visible,": {
-    outline: "3px solid var(--colors-focus)",
-    outlineOffset: "3px",
-  },
+
   "@media (min-width: 1400px)": {
-    ".main": {
-      maxWidth: "1280px",
-    },
-    ".application": {
-      minHeight: "175px",
-    },
-    ".application footer": {
-      marginTop: "40px",
+    maxWidth: 1280,
+  },
+});
+
+export const Card = styled("section", {
+  backgroundColor: "$background",
+  border: "1px solid $border",
+  borderRadius: "$lg",
+  boxShadow: "$card",
+});
+
+export const Dashboard = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr",
+  gap: 20,
+
+  "@sm": {
+    gridTemplateColumns: "2.15fr 1fr",
+  },
+});
+
+export const Column = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  gap: 18,
+});
+
+/* -------------------------------------------------------------------------- */
+/* Buttons                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export const ActionButton = styled("button", {
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 7,
+  padding: "8px 12px",
+  border: "1px solid $border",
+  borderRadius: "$control",
+  backgroundColor: "$background",
+  color: "$textSecondary",
+  fontFamily: "inherit",
+  fontSize: "var(--fontSizes-size11)",
+  fontWeight: 600,
+  whiteSpace: "nowrap",
+  cursor: "pointer",
+  transition: "all 200ms ease",
+
+  "&:focus-visible": {
+    outline: "none",
+    boxShadow: "var(--shadows-focus)",
+  },
+
+  variants: {
+    variant: {
+      secondary: {
+        "&:hover": {
+          backgroundColor: "$backgroundSecondary",
+        },
+      },
+      primary: {
+        borderColor: "$primaryLight",
+        backgroundColor: "$primaryLight",
+        color: "$background",
+
+        "&:hover": {
+          backgroundColor: "$primaryHover",
+        },
+      },
     },
   },
-  "@media (max-width: 1000px)": {
-    ".petSpace": {
-      width: "65px",
-    },
-    ".applicationTop": {
-      flexWrap: "wrap",
-    },
-    ".application footer": {
-      flexWrap: "wrap",
-    },
-    ".profile": {
-      gap: "16px",
-    },
-    ".avatarSpace": {
-      width: "48px",
-    },
+
+  defaultVariants: {
+    variant: "secondary",
   },
-  "@media (max-width: 767px)": {
-    ".main": {
-      padding: "24px 16px 48px",
-    },
-    ".dashboard": {
-      gridTemplateColumns: "1fr",
-    },
-    ".profile": {
-      flexWrap: "wrap",
-      padding: "24px 20px",
-    },
-    ".avatarSpace": {
-      display: "none",
-    },
-    ".profile > .secondary": {
-      marginLeft: "auto",
-    },
-    ".contacts": {
-      gap: "10px",
-    },
-    ".heading": {
-      alignItems: "flex-start",
-      flexDirection: "column",
-    },
-    ".applications": {
-      gridTemplateColumns: "1fr",
-    },
-    ".applicationTop": {
-      flexWrap: "nowrap",
-    },
-    ".petSpace": {
-      width: "80px",
-    },
-    ".application footer": {
-      flexWrap: "nowrap",
-    },
-    ".panel": {
-      padding: "20px",
-    },
-    ".nameRow h1": {
-      fontSize: "var(--fontSizes-xl)",
-    },
+});
+
+/* -------------------------------------------------------------------------- */
+/* Profile                                                                    */
+/* -------------------------------------------------------------------------- */
+
+export const Profile = styled(Card, {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: 16,
+  minHeight: 124,
+  marginBottom: 24,
+  padding: "24px 20px",
+
+  "@sm": {
+    flexWrap: "nowrap",
+    gap: 24,
+    padding: "32px 24px",
   },
-  "@media (max-width: 420px)": {
-    ".stats": {
-      gap: "10px",
-    },
-    ".stat": {
-      padding: "16px 12px",
-    },
-    ".statValue": {
-      gap: "6px",
-    },
-    ".statValue span": {
-      fontSize: "var(--fontSizes-size9)",
-    },
-    ".petSpace": {
-      width: "32px",
-    },
-    ".application": {
-      gap: "12px",
-    },
-    ".applicationTop": {
-      flexWrap: "wrap",
-    },
-    ".application footer": {
-      flexWrap: "wrap",
-    },
-    ".contacts": {
-      flexDirection: "column",
-    },
-    ".notifications": {
-      gap: "12px",
+});
+
+export const AvatarSpace = styled("div", {
+  display: "none",
+  flexShrink: 0,
+  width: 48,
+
+  "@sm": {
+    display: "block",
+    width: 68,
+  },
+});
+
+export const Identity = styled("div", {
+  flex: 1,
+  minWidth: 0,
+});
+
+export const NameRow = styled("div", {
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  gap: 12,
+
+  h1: {
+    margin: 0,
+    fontSize: "var(--fontSizes-xl)",
+
+    "@sm": {
+      fontSize: "var(--fontSizes-size22)",
     },
   },
 });
 
-const styles = {
-  page: "page",
-  main: "main",
-  card: "card",
-  profile: "profile",
-  avatarSpace: "avatarSpace",
-  identity: "identity",
-  nameRow: "nameRow",
-  verified: "verified",
-  contacts: "contacts",
-  secondary: "secondary",
-  primary: "primary",
-  dashboard: "dashboard",
-  leftColumn: "leftColumn",
-  rightColumn: "rightColumn",
-  stats: "stats",
-  stat: "stat",
-  statLabel: "statLabel",
-  statValue: "statValue",
-  notifications: "notifications",
-  switch: "switch",
-  switchOn: "switchOn",
-  panel: "panel",
-  preference: "preference",
-  chips: "chips",
-  outlineChip: "outlineChip",
-  environment: "environment",
-  heading: "heading",
-  filters: "filters",
-  activeFilter: "activeFilter",
-  applications: "applications",
-  application: "application",
-  petSpace: "petSpace",
-  applicationBody: "applicationBody",
-  applicationTop: "applicationTop",
-  badge: "badge",
-  analysis: "analysis",
-  completed: "completed",
-  pending: "pending",
-  approved: "approved",
-  description: "description",
-  organization: "organization",
-  dialog: "dialog",
-  close: "close",
-} as const;
-export default styles;
+export const VerifiedBadge = styled("span", {
+  padding: "4px 7px",
+  borderRadius: "$control",
+  backgroundColor: "$adoptedBackground",
+  color: "$primary",
+  fontSize: "var(--fontSizes-size10)",
+  fontWeight: 600,
+});
+
+export const Contacts = styled("div", {
+  display: "flex",
+  flexDirection: "column",
+  flexWrap: "wrap",
+  gap: 10,
+  marginTop: 10,
+  color: "$textMuted",
+  fontSize: "var(--fontSizes-size11)",
+
+  "@sm": {
+    flexDirection: "row",
+    gap: 18,
+  },
+
+  span: {
+    display: "flex",
+    alignItems: "center",
+    gap: 7,
+  },
+
+  svg: {
+    width: 13,
+    height: 13,
+  },
+});
+
+export const EditButton = styled(ActionButton, {
+  marginLeft: "auto",
+
+  "@sm": {
+    marginLeft: 0,
+  },
+});
+
+/* -------------------------------------------------------------------------- */
+/* Stats                                                                      */
+/* -------------------------------------------------------------------------- */
+
+export const Stats = styled("div", {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: 10,
+
+  "@sm": {
+    gap: 16,
+  },
+});
+
+export const Stat = styled(Card, {
+  display: "block",
+  minHeight: 116,
+  padding: "16px 12px",
+  color: "inherit",
+  textDecoration: "none",
+  transition: "border-color 200ms ease",
+
+  "@sm": {
+    padding: 20,
+  },
+
+  small: {
+    color: "$textMuted",
+    fontSize: "var(--fontSizes-size10)",
+  },
+
+  variants: {
+    interactive: {
+      true: {
+        cursor: "pointer",
+
+        "&:hover": {
+          borderColor: "$primaryBorder",
+        },
+
+        "&:focus-visible": {
+          outline: "none",
+          boxShadow: "var(--shadows-focus)",
+        },
+      },
+    },
+  },
+});
+
+export const StatLabel = styled("div", {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  color: "$textMuted",
+  fontSize: "var(--fontSizes-size11)",
+  fontWeight: 600,
+
+  svg: {
+    color: "$primaryLight",
+  },
+
+  variants: {
+    iconColor: {
+      warning: {
+        svg: {
+          color: "$warning",
+        },
+      },
+    },
+  },
+});
+
+export const StatValue = styled("div", {
+  display: "flex",
+  alignItems: "baseline",
+  gap: 6,
+  margin: "8px 0",
+
+  "@sm": {
+    gap: 10,
+  },
+
+  strong: {
+    fontSize: "var(--fontSizes-3xl)",
+  },
+
+  span: {
+    color: "$textMuted",
+    fontSize: "var(--fontSizes-size9)",
+
+    "@sm": {
+      fontSize: "var(--fontSizes-size10)",
+    },
+  },
+});
+
+/* -------------------------------------------------------------------------- */
+/* Notifications                                                              */
+/* -------------------------------------------------------------------------- */
+
+export const Notifications = styled(Card, {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  gap: 12,
+  padding: "22px 20px",
+
+  "@sm": {
+    gap: 24,
+  },
+
+  h2: {
+    margin: "0 0 5px",
+    fontSize: "var(--fontSizes-xs)",
+  },
+
+  p: {
+    maxWidth: 460,
+    margin: 0,
+    color: "$textMuted",
+    fontSize: "var(--fontSizes-size11)",
+    lineHeight: 1.5,
+  },
+});
+
+export const Switch = styled("button", {
+  flexShrink: 0,
+  width: 38,
+  height: 20,
+  padding: 2,
+  border: 0,
+  borderRadius: "var(--radii-pill)",
+  backgroundColor: "$border",
+  cursor: "pointer",
+  transition: "background-color 200ms ease",
+
+  "&:hover": {
+    filter: "brightness(0.96)",
+  },
+
+  "&:focus-visible": {
+    outline: "none",
+    boxShadow: "var(--shadows-focus)",
+  },
+
+  span: {
+    display: "block",
+    width: 16,
+    height: 16,
+    borderRadius: "var(--radii-circle)",
+    backgroundColor: "$background",
+    boxShadow: "var(--shadows-switch)",
+    transition: "transform 200ms ease",
+
+    "@media (prefers-reduced-motion: reduce)": {
+      transition: "none",
+    },
+  },
+
+  variants: {
+    checked: {
+      true: {
+        backgroundColor: "$primaryLight",
+
+        span: {
+          transform: "translateX(18px)",
+        },
+      },
+    },
+  },
+});
+
+/* -------------------------------------------------------------------------- */
+/* Side panels                                                                */
+/* -------------------------------------------------------------------------- */
+
+export const Panel = styled(Card, {
+  padding: "20px",
+
+  "@sm": {
+    padding: "22px 20px",
+  },
+
+  "& > h2": {
+    margin: "0 0 16px",
+    paddingBottom: 14,
+    borderBottom: "1px solid $border",
+    fontSize: "var(--fontSizes-sm)",
+  },
+});
+
+export const Preference = styled("div", {
+  marginTop: 14,
+
+  h3: {
+    margin: "0 0 7px",
+    color: "$textMuted",
+    fontSize: "var(--fontSizes-size10)",
+  },
+});
+
+export const Chips = styled("ul", {
+  display: "flex",
+  flexWrap: "wrap",
+  gap: 6,
+  margin: 0,
+  padding: 0,
+  listStyle: "none",
+});
+
+export const Chip = styled("li", {
+  padding: "5px 10px",
+  borderRadius: "var(--radii-pill)",
+  backgroundColor: "$adoptedBackground",
+  color: "$primary",
+  fontSize: "var(--fontSizes-size10)",
+  fontWeight: 600,
+
+  variants: {
+    outline: {
+      true: {
+        padding: "5px 8px",
+        border: "1px solid $primaryLight",
+        borderRadius: "$control",
+        backgroundColor: "transparent",
+        fontSize: "var(--fontSizes-size11)",
+        fontWeight: 400,
+      },
+    },
+  },
+});
+
+export const Environment = styled("ul", {
+  display: "flex",
+  flexDirection: "column",
+  gap: 9,
+  margin: 0,
+  padding: 0,
+  listStyle: "none",
+  color: "$textMuted",
+  fontSize: "var(--fontSizes-size11)",
+
+  li: {
+    display: "flex",
+    alignItems: "flex-start",
+    gap: 7,
+    lineHeight: 1.4,
+  },
+
+  svg: {
+    flexShrink: 0,
+    width: 13,
+    height: 13,
+    color: "$primaryLight",
+  },
+});
+
+/* -------------------------------------------------------------------------- */
+/* Edit dialog                                                                */
+/* -------------------------------------------------------------------------- */
+
+export const Dialog = styled("dialog", {
+  width: "calc(100% - 32px)",
+  maxWidth: 460,
+  padding: 32,
+  border: "1px solid $border",
+  borderRadius: "$lg",
+  backgroundColor: "$background",
+  color: "$text",
+  boxShadow: "var(--shadows-dialog)",
+
+  "&::backdrop": {
+    backgroundColor: "$overlay",
+  },
+});
+
+export const DialogTitle = styled("h2", {
+  margin: "0 20px 20px 0",
+  fontSize: "var(--fontSizes-xl)",
+});
+
+export const DialogForm = styled("form", {
+  display: "flex",
+  flexDirection: "column",
+  gap: 16,
+});
+
+export const FieldLabel = styled("label", {
+  display: "flex",
+  flexDirection: "column",
+  gap: 8,
+  fontSize: "var(--fontSizes-size13)",
+});
+
+export const CloseButton = styled("button", {
+  position: "absolute",
+  top: 14,
+  right: 14,
+  display: "flex",
+  padding: 4,
+  border: 0,
+  borderRadius: "$control",
+  backgroundColor: "transparent",
+  color: "$textMuted",
+  cursor: "pointer",
+  transition: "color 200ms ease",
+
+  "&:hover": {
+    color: "$text",
+  },
+
+  "&:focus-visible": {
+    outline: "none",
+    boxShadow: "var(--shadows-focus)",
+  },
+});

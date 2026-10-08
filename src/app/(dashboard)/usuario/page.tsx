@@ -1,23 +1,77 @@
 "use client";
-import Input from "@/components/Input";
 
 import Link from "next/link";
+
 import {
   Heart,
-  Star,
-  Mail,
-  Phone,
-  MapPin,
   House,
-  Users,
-  PawPrint,
+  Mail,
+  MapPin,
   Pencil,
+  PawPrint,
+  Phone,
+  Star,
+  Users,
   X,
 } from "lucide-react";
-import TopBar from "@/components/TopBar";
-import styles, { userStyles } from "./styles";
 
+import Input, { type StandardInputProps } from "@/components/Input";
+import TopBar from "@/components/TopBar";
 import { useUserPortal } from "@/features/user/useUserPortal";
+
+import {
+  ActionButton,
+  AvatarSpace,
+  Chip,
+  Chips,
+  CloseButton,
+  Column,
+  Contacts,
+  Dashboard,
+  Dialog,
+  DialogForm,
+  DialogTitle,
+  EditButton,
+  Environment,
+  FieldLabel,
+  Identity,
+  Main,
+  NameRow,
+  Notifications,
+  Page,
+  Panel,
+  Preference,
+  Profile,
+  Stat,
+  StatLabel,
+  StatValue,
+  Stats,
+  Switch,
+  VerifiedBadge,
+} from "./styles";
+
+const NOTIFICATIONS_STORAGE_KEY = "pethub:notifications";
+
+const PROFILE_FIELDS: ReadonlyArray<{
+  key: "name" | "email" | "phone" | "city";
+  label: string;
+  type: NonNullable<StandardInputProps["type"]>;
+}> = [
+  { key: "name", label: "Nome", type: "text" },
+  { key: "email", label: "E-mail", type: "email" },
+  { key: "phone", label: "Telefone", type: "tel" },
+  { key: "city", label: "Cidade / Estado", type: "text" },
+];
+
+const PREFERRED_SPECIES = ["Cães", "Gatos"];
+const PREFERRED_SIZES = ["Médio", "Grande"];
+
+const ENVIRONMENT = [
+  { icon: House, text: "Casa com quintal cercado" },
+  { icon: Users, text: "Moro com 3 adultos (sem crianças pequenas)" },
+  { icon: PawPrint, text: "Já possuo 1 pet (cão idoso sociável)" },
+];
+
 export default function UserPage() {
   const {
     profile,
@@ -30,204 +84,197 @@ export default function UserPage() {
     closeModal,
     saveProfile,
   } = useUserPortal();
+
+  const inProgress = requests.filter((item) =>
+    ["analysis", "pending"].includes(item.tone),
+  ).length;
+  const completed = requests.filter((item) => item.tone === "completed").length;
+
+  function toggleNotifications() {
+    const value = !notifications;
+    setNotifications(value);
+
+    try {
+      localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, String(value));
+    } catch {
+      /* Mantém a preferência apenas na sessão. */
+    }
+  }
+
   return (
-    <div className={`${userStyles()} ${styles.page}`}>
+    <Page>
       <TopBar />
-      <main className={styles.main}>
-        <>
-          <section
-            className={`${styles.card} ${styles.profile}`}
-            aria-label="Seu perfil"
-          >
-            <div className={styles.avatarSpace} aria-hidden />
-            <div className={styles.identity}>
-              <div className={styles.nameRow}>
-                <h1>{profile.name}</h1>
-                <span className={styles.verified}>Conta Verificada</span>
+
+      <Main>
+        <Profile aria-label="Seu perfil">
+          <AvatarSpace aria-hidden />
+
+          <Identity>
+            <NameRow>
+              <h1>{profile.name}</h1>
+              <VerifiedBadge>Conta Verificada</VerifiedBadge>
+            </NameRow>
+
+            <Contacts>
+              <span>
+                <Mail aria-hidden />
+                {profile.email}
+              </span>
+              <span>
+                <Phone aria-hidden />
+                {profile.phone}
+              </span>
+              <span>
+                <MapPin aria-hidden />
+                {profile.city}
+              </span>
+            </Contacts>
+          </Identity>
+
+          <EditButton type="button" onClick={() => setEditing(true)}>
+            <Pencil size={14} aria-hidden />
+            Editar Perfil
+          </EditButton>
+        </Profile>
+
+        <Dashboard>
+          <Column>
+            <Stats>
+              <Stat
+                as={Link}
+                href="/usuario/adocoes"
+                interactive
+                aria-label="Minhas adoções: ver solicitações"
+              >
+                <StatLabel>
+                  MINHAS ADOÇÕES
+                  <Heart size={16} aria-hidden />
+                </StatLabel>
+                <StatValue>
+                  <strong>{requests.length}</strong>
+                  <span>Solicitações feitas</span>
+                </StatValue>
+                <small>
+                  {inProgress} em andamento • {completed}{" "}
+                  {completed === 1 ? "concluída" : "concluídas"}
+                </small>
+              </Stat>
+
+              <Stat>
+                <StatLabel iconColor="warning">
+                  ANIMAIS FAVORITOS
+                  <Star size={16} aria-hidden />
+                </StatLabel>
+                <StatValue>
+                  <strong>5</strong>
+                  <span>Salvos para acompanhar</span>
+                </StatValue>
+                <small>4 cães • 1 gato</small>
+              </Stat>
+            </Stats>
+
+            <Notifications>
+              <div>
+                <h2>Receber atualizações de campanhas e novidades</h2>
+                <p>
+                  Envio de e-mails sobre mutirões de vacinação, feiras de adoção
+                  e campanhas da sua área.
+                </p>
               </div>
-              <div className={styles.contacts}>
-                <span>
-                  <Mail />
-                  {profile.email}
-                </span>
-                <span>
-                  <Phone />
-                  {profile.phone}
-                </span>
-                <span>
-                  <MapPin />
-                  {profile.city}
-                </span>
-              </div>
-            </div>
-            <button
-              className={styles.secondary}
-              onClick={() => setEditing(true)}
-            >
-              <Pencil size={14} />
-              Editar Perfil
-            </button>
-          </section>
-          <div className={styles.dashboard}>
-            <div className={styles.leftColumn}>
-              <div className={styles.stats}>
-                <Link
-                  href="/usuario/adocoes"
-                  className={`${styles.card} ${styles.stat}`}
-                  aria-label="Minhas adoções: ver solicitações"
-                >
-                  <div className={styles.statLabel}>
-                    MINHAS ADOÇÕES
-                    <Heart size={16} />
-                  </div>
-                  <div className={styles.statValue}>
-                    <strong>{requests.length}</strong>
-                    <span>Solicitações feitas</span>
-                  </div>
-                  <small>
-                    {
-                      requests.filter((item) =>
-                        ["analysis", "pending"].includes(item.tone),
-                      ).length
-                    }{" "}
-                    em andamento •{" "}
-                    {
-                      requests.filter((item) => item.tone === "completed")
-                        .length
-                    }{" "}
-                    concluída
-                  </small>
-                </Link>
-                <div className={`${styles.card} ${styles.stat}`}>
-                  <div className={styles.statLabel}>
-                    ANIMAIS FAVORITOS
-                    <Star size={16} color="var(--colors-warning)" />
-                  </div>
-                  <div className={styles.statValue}>
-                    <strong>5</strong>
-                    <span>Salvos para acompanhar</span>
-                  </div>
-                  <small>4 cães • 1 gato</small>
-                </div>
-              </div>
-              <section className={`${styles.card} ${styles.notifications}`}>
-                <div>
-                  <h2>Receber atualizações de campanhas e novidades</h2>
-                  <p>
-                    Envio de e-mails sobre mutirões de vacinação, feiras de
-                    adoção e campanhas da sua área.
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  role="switch"
-                  aria-checked={notifications}
-                  aria-label="Receber atualizações por e-mail"
-                  className={`${styles.switch} ${notifications ? styles.switchOn : ""}`}
-                  onClick={() => {
-                    const value = !notifications;
-                    setNotifications(value);
-                    try {
-                      localStorage.setItem(
-                        "pethub:notifications",
-                        String(value),
-                      );
-                    } catch {
-                      /* Mantém a preferência na sessão. */
-                    }
-                  }}
-                >
-                  <span />
-                </button>
-              </section>
-            </div>
-            <aside className={styles.rightColumn}>
-              <section className={`${styles.card} ${styles.panel}`}>
-                <h2>Preferências de Adoção</h2>
-                <div className={styles.preference}>
-                  <h3>ESPÉCIES PREFERIDAS</h3>
-                  <div className={styles.chips}>
-                    <span>Cães</span>
-                    <span>Gatos</span>
-                  </div>
-                </div>
-                <div className={styles.preference}>
-                  <h3>PORTE DO ANIMAL</h3>
-                  <div className={styles.chips}>
-                    <span>Médio</span>
-                    <span>Grande</span>
-                  </div>
-                </div>
-                <div className={styles.preference}>
-                  <h3>NECESSIDADES ESPECIAIS</h3>
-                  <span className={styles.outlineChip}>
-                    Sim, aceito pets especiais
-                  </span>
-                </div>
-              </section>
-              <section className={`${styles.card} ${styles.panel}`}>
-                <h2>Meu Ambiente</h2>
-                <ul className={styles.environment}>
-                  <li>
-                    <House />
-                    Casa com quintal cercado
+
+              <Switch
+                type="button"
+                role="switch"
+                aria-checked={notifications}
+                aria-label="Receber atualizações por e-mail"
+                checked={notifications}
+                onClick={toggleNotifications}
+              >
+                <span />
+              </Switch>
+            </Notifications>
+          </Column>
+
+          <Column as="aside">
+            <Panel>
+              <h2>Preferências de Adoção</h2>
+
+              <Preference>
+                <h3>ESPÉCIES PREFERIDAS</h3>
+                <Chips>
+                  {PREFERRED_SPECIES.map((item) => (
+                    <Chip key={item}>{item}</Chip>
+                  ))}
+                </Chips>
+              </Preference>
+
+              <Preference>
+                <h3>PORTE DO ANIMAL</h3>
+                <Chips>
+                  {PREFERRED_SIZES.map((item) => (
+                    <Chip key={item}>{item}</Chip>
+                  ))}
+                </Chips>
+              </Preference>
+
+              <Preference>
+                <h3>NECESSIDADES ESPECIAIS</h3>
+                <Chips>
+                  <Chip outline>Sim, aceito pets especiais</Chip>
+                </Chips>
+              </Preference>
+            </Panel>
+
+            <Panel>
+              <h2>Meu Ambiente</h2>
+              <Environment>
+                {ENVIRONMENT.map(({ icon: Icon, text }) => (
+                  <li key={text}>
+                    <Icon aria-hidden />
+                    {text}
                   </li>
-                  <li>
-                    <Users />
-                    Moro com 3 adultos (sem crianças pequenas)
-                  </li>
-                  <li>
-                    <PawPrint />
-                    Já possuo 1 pet (cão idoso sociável)
-                  </li>
-                </ul>
-              </section>
-            </aside>
-          </div>
-        </>
-      </main>
-      <dialog
+                ))}
+              </Environment>
+            </Panel>
+          </Column>
+        </Dashboard>
+      </Main>
+
+      <Dialog
         ref={dialogRef}
-        className={styles.dialog}
+        aria-labelledby="edit-profile-title"
         onCancel={closeModal}
         onClick={(event) => {
           if (event.target === event.currentTarget) closeModal();
         }}
       >
-        <button
-          className={styles.close}
-          onClick={closeModal}
-          aria-label="Fechar"
-        >
-          <X size={20} />
-        </button>
+        <CloseButton type="button" onClick={closeModal} aria-label="Fechar">
+          <X size={20} aria-hidden />
+        </CloseButton>
+
         {editing && (
-          <form onSubmit={saveProfile}>
-            <h2>Editar Perfil</h2>
-            {Object.entries({
-              name: "Nome",
-              email: "E-mail",
-              phone: "Telefone",
-              city: "Cidade / Estado",
-            }).map(([key, label]) => (
-              <label key={key}>
+          <DialogForm onSubmit={saveProfile}>
+            <DialogTitle id="edit-profile-title">Editar Perfil</DialogTitle>
+
+            {PROFILE_FIELDS.map(({ key, label, type }) => (
+              <FieldLabel key={key}>
                 {label}
                 <Input
+                  variant="compact"
                   name={key}
-                  defaultValue={profile[key as keyof typeof profile]}
+                  defaultValue={profile[key]}
+                  type={type}
                   required
-                  type={
-                    key === "email" ? "email" : key === "phone" ? "tel" : "text"
-                  }
                 />
-              </label>
+              </FieldLabel>
             ))}
-            <button className={styles.primary} type="submit">
+
+            <ActionButton variant="primary" type="submit">
               Salvar alterações
-            </button>
-          </form>
+            </ActionButton>
+          </DialogForm>
         )}
-      </dialog>
-    </div>
+      </Dialog>
+    </Page>
   );
 }
