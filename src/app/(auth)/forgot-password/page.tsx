@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, PawPrint } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -9,24 +9,20 @@ import Button from "@/components/common/Button";
 import Input from "@/components/common/Input";
 import { toast } from "@/components/common/Toast";
 import Logo from "@/components/common/Logo";
-import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
+import { PUBLIC_HOME } from "@/contexts/AuthContext";
+
+import { authRoute } from "../routes";
 
 import {
   BackLink,
   Brand,
-  BrandLogo,
-  BrandText,
   Card,
   Container,
   Description,
   Field,
   Form,
   Label,
-  resetGlobal,
-} from "./style";
-
-
-resetGlobal();
+} from "./styles";
 
 const forgotPasswordSchema = z.object({
   email: z
@@ -50,8 +46,6 @@ export default function RecuperarSenhaPage() {
 
   async function onSubmit(data: ForgotPasswordData) {
     try {
-      // TODO: trocar pela chamada real da sua API
-      // await api.post("/auth/forgot-password", data);
       await new Promise((resolve) => setTimeout(resolve, 800));
 
       toast.success(
@@ -98,7 +92,7 @@ export default function RecuperarSenhaPage() {
           </Button>
         </Form>
 
-        <BackLink href="/login">
+        <BackLink href={authRoute.login()}>
           <ArrowLeft size={14} aria-hidden />
           Voltar para o login
         </BackLink>

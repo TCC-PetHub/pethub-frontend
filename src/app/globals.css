@@ -1,0 +1,215 @@
+/* Valores do design system. Componentes e Stitches referenciam estes tokens. */
+:root {
+  --pethub-colors-text: #0f172a;
+  --colors-text: var(--pethub-colors-text);
+  --pethub-colors-textSecondary: #475569;
+  --colors-textSecondary: var(--pethub-colors-textSecondary);
+  --pethub-colors-textMuted: #64748b;
+  --colors-textMuted: var(--pethub-colors-textMuted);
+  --pethub-colors-background: #ffffff;
+  --colors-background: var(--pethub-colors-background);
+  --pethub-colors-backgroundSecondary: #f1f5f9;
+  --colors-backgroundSecondary: var(--pethub-colors-backgroundSecondary);
+  --pethub-colors-border: #e2e8f0;
+  --colors-border: var(--pethub-colors-border);
+  --pethub-colors-primary: #115e59;
+  --colors-primary: var(--pethub-colors-primary);
+  --pethub-colors-primaryLight: #0d9488;
+  --colors-primaryLight: var(--pethub-colors-primaryLight);
+  --pethub-colors-warning: #f59e0b;
+  --colors-warning: var(--pethub-colors-warning);
+  --pethub-colors-negative: #ef4444;
+  --colors-negative: var(--pethub-colors-negative);
+  --pethub-colors-negativeBackground: #fee2e2;
+  --colors-negativeBackground: var(--pethub-colors-negativeBackground);
+  --pethub-colors-positive: #10b981;
+  --colors-positive: var(--pethub-colors-positive);
+  --pethub-colors-positiveBackground: #d1fae5;
+  --colors-positiveBackground: var(--pethub-colors-positiveBackground);
+  --pethub-colors-inTreatment: #d97706;
+  --colors-inTreatment: var(--pethub-colors-inTreatment);
+  --pethub-colors-inTreatmentBackground: #fef3c7;
+  --colors-inTreatmentBackground: var(--pethub-colors-inTreatmentBackground);
+  --pethub-colors-available: #059669;
+  --colors-available: var(--pethub-colors-available);
+  --pethub-colors-adoptedBackground: #ccfbf1;
+  --colors-adoptedBackground: var(--pethub-colors-adoptedBackground);
+  --pethub-colors-male: #1d4ed8;
+  --colors-male: var(--pethub-colors-male);
+  --pethub-colors-maleBackground: #dbeafe;
+  --colors-maleBackground: var(--pethub-colors-maleBackground);
+  --pethub-colors-female: #be185d;
+  --colors-female: var(--pethub-colors-female);
+  --pethub-colors-femaleBackground: #fce7f3;
+  --colors-femaleBackground: var(--pethub-colors-femaleBackground);
+  --pethub-colors-age: #115e59;
+  --colors-age: var(--pethub-colors-age);
+  --pethub-colors-ageBackground: #ccfbf1;
+  --colors-ageBackground: var(--pethub-colors-ageBackground);
+  --pethub-colors-backgroundPage: #f8fafc;
+  --colors-backgroundPage: var(--pethub-colors-backgroundPage);
+  --pethub-colors-primaryHover: #0f766e;
+  --colors-primaryHover: var(--pethub-colors-primaryHover);
+  --pethub-colors-textSubtle: #94a3b8;
+  --colors-textSubtle: var(--pethub-colors-textSubtle);
+  --pethub-colors-borderStrong: #cbd5e1;
+  --colors-borderStrong: var(--pethub-colors-borderStrong);
+  --pethub-colors-backgroundMint: #f0fdfa;
+  --colors-backgroundMint: var(--pethub-colors-backgroundMint);
+  --pethub-colors-primaryBorder: #99f6e4;
+  --colors-primaryBorder: var(--pethub-colors-primaryBorder);
+  --pethub-colors-focus: #5eead4;
+  --colors-focus: var(--pethub-colors-focus);
+  --pethub-colors-positiveDark: #065f46;
+  --colors-positiveDark: var(--pethub-colors-positiveDark);
+  --pethub-colors-positiveSoft: #ecfdf5;
+  --colors-positiveSoft: var(--pethub-colors-positiveSoft);
+  --pethub-colors-pending: #ea580c;
+  --colors-pending: var(--pethub-colors-pending);
+  --pethub-colors-pendingBackground: #ffedd5;
+  --colors-pendingBackground: var(--pethub-colors-pendingBackground);
+  --pethub-colors-negativeStrong: #dc2626;
+  --colors-negativeStrong: var(--pethub-colors-negativeStrong);
+  --pethub-colors-footerBorder: #1e293b;
+  --colors-footerBorder: var(--pethub-colors-footerBorder);
+  --pethub-colors-overlay: #0f172a66;
+  --colors-overlay: var(--pethub-colors-overlay);
+  --pethub-colors-shadowCard: #0f172a04;
+  --colors-shadowCard: var(--pethub-colors-shadowCard);
+  --pethub-colors-shadowDialog: #0f172a33;
+  --colors-shadowDialog: var(--pethub-colors-shadowDialog);
+  --pethub-colors-shadowSwitch: #0001;
+  --colors-shadowSwitch: var(--pethub-colors-shadowSwitch);
+  --pethub-colors-googleBlue: #4285f4;
+  --colors-googleBlue: var(--pethub-colors-googleBlue);
+  --pethub-colors-googleGreen: #34a853;
+  --colors-googleGreen: var(--pethub-colors-googleGreen);
+  --pethub-colors-googleYellow: #fbbc05;
+  --colors-googleYellow: var(--pethub-colors-googleYellow);
+  --pethub-colors-googleRed: #ea4335;
+  --colors-googleRed: var(--pethub-colors-googleRed);
+  --pethub-fonts-sans: Arial, Helvetica, sans-serif;
+  --fonts-sans: var(--pethub-fonts-sans);
+  --pethub-fonts-mono: monospace;
+  --fonts-mono: var(--pethub-fonts-mono);
+  --pethub-fontSizes-display: 3rem;
+  --fontSizes-display: var(--pethub-fontSizes-display);
+  --pethub-fontSizes-xs: 0.75rem;
+  --fontSizes-xs: var(--pethub-fontSizes-xs);
+  --pethub-fontSizes-sm: 0.875rem;
+  --fontSizes-sm: var(--pethub-fontSizes-sm);
+  --pethub-fontSizes-md: 1rem;
+  --fontSizes-md: var(--pethub-fontSizes-md);
+  --pethub-fontSizes-lg: 1.125rem;
+  --fontSizes-lg: var(--pethub-fontSizes-lg);
+  --pethub-fontSizes-xl: 1.25rem;
+  --fontSizes-xl: var(--pethub-fontSizes-xl);
+  --pethub-fontSizes-2xl: 1.5rem;
+  --fontSizes-2xl: var(--pethub-fontSizes-2xl);
+  --pethub-fontSizes-3xl: 1.875rem;
+  --fontSizes-3xl: var(--pethub-fontSizes-3xl);
+  --pethub-fontSizes-4xl: 2.25rem;
+  --fontSizes-4xl: var(--pethub-fontSizes-4xl);
+  --pethub-fontSizes-size10: 10px;
+  --fontSizes-size10: var(--pethub-fontSizes-size10);
+  --pethub-fontSizes-size13: 13px;
+  --fontSizes-size13: var(--pethub-fontSizes-size13);
+  --pethub-fontSizes-size11: 11px;
+  --fontSizes-size11: var(--pethub-fontSizes-size11);
+  --pethub-fontSizes-size22: 22px;
+  --fontSizes-size22: var(--pethub-fontSizes-size22);
+  --pethub-fontSizes-size9: 9px;
+  --fontSizes-size9: var(--pethub-fontSizes-size9);
+  --pethub-fontSizes-size23: 23px;
+  --fontSizes-size23: var(--pethub-fontSizes-size23);
+  --pethub-fontSizes-size27: 27px;
+  --fontSizes-size27: var(--pethub-fontSizes-size27);
+  --pethub-fontSizes-size15: 15px;
+  --fontSizes-size15: var(--pethub-fontSizes-size15);
+  --pethub-fontSizes-size21: 21px;
+  --fontSizes-size21: var(--pethub-fontSizes-size21);
+  --pethub-space-xs: 4px;
+  --space-xs: var(--pethub-space-xs);
+  --pethub-space-sm: 8px;
+  --space-sm: var(--pethub-space-sm);
+  --pethub-space-md: 16px;
+  --space-md: var(--pethub-space-md);
+  --pethub-space-lg: 24px;
+  --space-lg: var(--pethub-space-lg);
+  --pethub-space-xl: 32px;
+  --space-xl: var(--pethub-space-xl);
+  --pethub-space-2xl: 48px;
+  --space-2xl: var(--pethub-space-2xl);
+  --pethub-space-3xl: 64px;
+  --space-3xl: var(--pethub-space-3xl);
+  --pethub-radii-sm: 4px;
+  --radii-sm: var(--pethub-radii-sm);
+  --pethub-radii-md: 8px;
+  --radii-md: var(--pethub-radii-md);
+  --pethub-radii-lg: 12px;
+  --radii-lg: var(--pethub-radii-lg);
+  --pethub-radii-full: 9999px;
+  --radii-full: var(--pethub-radii-full);
+  --pethub-radii-control: 5px;
+  --radii-control: var(--pethub-radii-control);
+  --pethub-radii-input: 6px;
+  --radii-input: var(--pethub-radii-input);
+  --pethub-radii-panel: 10px;
+  --radii-panel: var(--pethub-radii-panel);
+  --pethub-radii-pill: 20px;
+  --radii-pill: var(--pethub-radii-pill);
+  --pethub-radii-profile: 28px;
+  --radii-profile: var(--pethub-radii-profile);
+  --pethub-radii-circle: 50%;
+  --radii-circle: var(--pethub-radii-circle);
+  --pethub-shadows-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadows-sm: var(--pethub-shadows-sm);
+  --pethub-shadows-md: 0 4px 6px rgba(15, 23, 42, 0.08);
+  --shadows-md: var(--pethub-shadows-md);
+  --pethub-shadows-lg: 0 10px 15px rgba(15, 23, 42, 0.1);
+  --shadows-lg: var(--pethub-shadows-lg);
+  --pethub-shadows-card: 0 2px 5px var(--pethub-colors-shadowCard);
+  --shadows-card: var(--pethub-shadows-card);
+  --pethub-shadows-switch: 0 1px 3px var(--pethub-colors-shadowSwitch);
+  --shadows-switch: var(--pethub-shadows-switch);
+  --pethub-shadows-dialog: 0 20px 60px var(--pethub-colors-shadowDialog);
+  --shadows-dialog: var(--pethub-shadows-dialog);
+  --pethub-shadows-focus: 0 0 0 3px var(--pethub-colors-primaryLight);
+  --shadows-focus: var(--pethub-shadows-focus);
+  --pethub-shadows-focusMint: 0 0 0 3px var(--pethub-colors-adoptedBackground);
+  --shadows-focusMint: var(--pethub-shadows-focusMint);
+  --pethub-shadows-focusSoft: 0 0 0 3px rgba(13, 148, 136, 0.12);
+  --shadows-focusSoft: var(--pethub-shadows-focusSoft);
+  --pethub-shadows-focusNegative: 0 0 0 3px rgba(239, 68, 68, 0.12);
+  --shadows-focusNegative: var(--pethub-shadows-focusNegative);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: var(--fonts-sans);
+  font-size: var(--fontSizes-md);
+  color: var(--colors-text);
+  background: var(--colors-background);
+}
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+button {
+  cursor: pointer;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
