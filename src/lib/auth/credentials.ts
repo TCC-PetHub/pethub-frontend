@@ -1,7 +1,9 @@
+// lib/auth/credentials.ts (arquivo completo)
 import "server-only";
 import { scrypt, timingSafeEqual } from "node:crypto";
 import { promisify } from "node:util";
 import { z } from "zod";
+import { createClient } from "@supabase/supabase-js";
 import type { LoginCredentials, SessionUser } from "./types";
 
 const deriveKey = promisify(scrypt);
@@ -12,6 +14,45 @@ const userSchema = z.object({
 });
 
 export class AuthenticationUnavailable extends Error {}
+
+const roleFromPerfil = { adotante: "adopter", ong: "organization" } as const;
+
+async function authenticateSupabase(
+  credentials: LoginCredentials,
+): Promise<SessionUser | null> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) {
+    throw new AuthenticationUnavailable("Supabase não configurado.");
+  }
+
+  // Cliente descartável: o cookie de sessão continua sendo o seu JWT
+  const supabase = createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email: credentials.email,
+    password: credentials.password,
+  });
+  if (error || !data.user) return null;
+
+  const { data: perfil, error: perfilError } = await supabase
+    .from("usuarios")
+    .select("id, nome, perfil, status")
+    .eq("id", data.user.id)
+    .single();
+
+  if (perfilError || !perfil) return null;
+  // Cadastro ainda em análise não entra
+  if (perfil.status !== "ativo") return null;
+
+  const role = roleFromPerfil[perfil.perfil as keyof typeof roleFromPerfil];
+  // O perfil escolhido na tela precisa bater com o da conta
+  if (!role || role !== credentials.profile) return null;
+
+  return { id: perfil.id, name: perfil.nome, role };
+}
 
 // Contas de teste locais: uma por perfil, cada uma com seu prefixo de variáveis.
 const devAccounts: Record<
@@ -64,6 +105,10 @@ async function authenticateDev(
 export async function authenticate(
   credentials: LoginCredentials,
 ): Promise<SessionUser | null> {
+  if (process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    return authenticateSupabase(credentials);
+  }
+
   const endpoint = process.env.AUTH_LOGIN_URL;
   if (endpoint) {
     const url = new URL(endpoint);
