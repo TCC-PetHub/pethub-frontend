@@ -2,6 +2,8 @@
 
 A estrutura do cadastro foi organizada em módulos por perfil e com validações compartilhadas em utilitários dedicados. Toda a documentação deste módulo fica centralizada nesta página.
 
+Os formulários agora enviam os dados e documentos ao endpoint `/api/auth/register`, com validação no servidor e tratamento de erros por campo. A confirmação só aparece após o servidor aceitar o cadastro. A configuração do banco, das chaves e do envio de e-mail está em `docs/registration.md`.
+
 ## Estrutura principal
 
 - `page.tsx`: define o fluxo principal e alterna entre os perfis com base no parâmetro `perfil` da URL.

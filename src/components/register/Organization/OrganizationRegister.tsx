@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type ChangeEventHandler } from "react";
 
+import { passwordHelp } from "@/schemas/password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, ChevronDown, Hourglass, Upload } from "lucide-react";
 import {
@@ -16,7 +17,7 @@ import Brand from "@/components/common/Brand";
 import Input from "@/components/common/Input";
 import Logo from "@/components/common/Logo";
 import { PUBLIC_HOME, useAuth } from "@/contexts/AuthContext";
-import { isFileList } from "@/utils/Register/registerFiles";
+import { submitRegistration } from "@/utils/Register/submitRegistration";
 import {
   organizationRegisterSchema,
   type OrganizationRegisterData,
@@ -113,6 +114,8 @@ function OrganizationDocumentPicker({
 
 export default function OrganizationRegister() {
   const [pendingReview, setPendingReview] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [confirmationTitle, setConfirmationTitle] = useState("");
   const { logout } = useAuth();
   const [documentNames, setDocumentNames] = useState<
     Partial<Record<OrganizationDocumentField, string>>
@@ -120,6 +123,7 @@ export default function OrganizationRegister() {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<OrganizationData>({
     resolver: zodResolver(organizationRegisterSchema),
@@ -135,15 +139,8 @@ export default function OrganizationRegister() {
   const responsibleCpfRegistration = register("responsibleCpf");
 
   async function onSubmit(data: OrganizationData) {
-    console.log({
-      ...data,
-      cnpjDocument: Array.from(data.cnpjDocument).map((file) => file.name),
-      statuteDocument: Array.from(data.statuteDocument).map((file) => file.name),
-      shelterDocument: isFileList(data.shelterDocument)
-        ? Array.from(data.shelterDocument).map((file) => file.name)
-        : [],
-    });
-    setPendingReview(true);
+    const result = await submitRegistration("organization", data, setError);
+    if (result) { setConfirmationTitle(result.title); setConfirmationMessage(result.message); setPendingReview(true); }
   }
 
   function updateDocumentName(
@@ -168,10 +165,9 @@ export default function OrganizationRegister() {
             <PendingIcon className="organization-registration-pending-icon" aria-hidden>
               <Hourglass className="organization-registration-pending-hourglass" size={44} strokeWidth={1.75} />
             </PendingIcon>
-            <PendingTitle className="organization-registration-pending-title">Solicitação enviada para análise</PendingTitle>
+            <PendingTitle className="organization-registration-pending-title">{confirmationTitle}</PendingTitle>
             <PendingText className="organization-registration-pending-description">
-              Recebemos o cadastro da sua organização. Assim que a análise for
-              concluída, entraremos em contato.
+              {confirmationMessage}
             </PendingText>
             <BackLink
               className="organization-registration-home-link"
@@ -201,6 +197,7 @@ export default function OrganizationRegister() {
         </AuthTabs>
 
         <OrganizationRegistrationForm className="organization-registration-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+          {errors.root?.server && <OrganizationFieldError role="alert">{errors.root.server.message}</OrganizationFieldError>}
           <OrganizationField className="organization-registration-profile-field">
             <OrganizationFieldLabel as="span">Tipo de cadastro</OrganizationFieldLabel>
             <OrganizationProfileSelector className="organization-registration-profile-selector">
@@ -411,6 +408,7 @@ export default function OrganizationRegister() {
                 error={errors.password?.message}
                 {...register("password")}
               />
+              <p>{passwordHelp}</p>
             </OrganizationField>
           </OrganizationSection>
 

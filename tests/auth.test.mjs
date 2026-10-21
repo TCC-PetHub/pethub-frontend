@@ -5,27 +5,11 @@ import { randomBytes } from "node:crypto";
 import ts from "typescript";
 import { SignJWT, decodeJwt } from "jose";
 
-const registerFilesUrl = new URL("../src/utils/Register/registerFiles.ts", import.meta.url).href;
-const registerFormattingUrl = new URL("../src/utils/Register/registerFormatting.ts", import.meta.url).href;
-const registerValidationSource = await fs.readFile(new URL("../src/utils/Register/registerValidation.ts", import.meta.url), "utf8");
-const registerValidationJs = ts.transpileModule(registerValidationSource, {
-  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
-}).outputText
-  .replace(/from ["']\.\/registerFormatting["']/g, `from ${JSON.stringify(registerFormattingUrl)}`);
-const registerValidationModule = `data:text/javascript;base64,${Buffer.from(registerValidationJs).toString("base64")}`;
-const registerFormattingSource = await fs.readFile(new URL("../src/utils/Register/registerFormatting.ts", import.meta.url), "utf8");
-const registerFormattingJs = ts.transpileModule(registerFormattingSource, {
-  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
-}).outputText;
-const { formatCpf, formatCnpj, formatPhone, formatState } = await import(`data:text/javascript;base64,${Buffer.from(registerFormattingJs).toString("base64")}`);
-const registerSchemasSource = await fs.readFile(new URL("../src/utils/Register/registerSchemas.ts", import.meta.url), "utf8");
-const registerSchemasJs = ts.transpileModule(registerSchemasSource, {
-  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
-}).outputText
-  .replace(/from ["']zod["']/g, `from ${JSON.stringify(import.meta.resolve("zod"))}`)
-  .replace(/from ["']\.\/registerFiles["']/g, `from ${JSON.stringify(registerFilesUrl)}`)
-  .replace(/from ["']\.\/registerValidation["']/g, `from ${JSON.stringify(registerValidationModule)}`);
-const { userRegisterSchema, organizationRegisterSchema } = await import(`data:text/javascript;base64,${Buffer.from(registerSchemasJs).toString("base64")}`);
+import { importSource } from "./helpers/import-source.mjs";
+const { formatCpf, formatCnpj, formatPhone, formatState } = await importSource("utils/Register/registerFormatting.ts");
+const { userRegisterSchema, organizationRegisterSchema } = await importSource("utils/Register/registerSchemas.ts");
+const { loginSchema } = await importSource("schemas/auth.ts");
+const { passwordSchema } = await importSource("schemas/password.ts");
 
 class MockFileList extends Array {
   item(index) {
@@ -108,7 +92,7 @@ const validUserRegistration = {
   phone: "(11) 98765-4321",
   city: "São Paulo",
   state: "sp",
-  password: "senha-segura",
+  password: "Senha-segura1!",
   identityDocuments: files(pdf),
   acceptedTerms: true,
 };
@@ -124,7 +108,7 @@ const validOrganizationRegistration = {
   responsibleCpf: "529.982.247-25",
   responsibleEmail: "maria@example.org",
   accessEmail: "acesso@example.org",
-  password: "senha-segura",
+  password: "Senha-segura1!",
   cnpjDocument: files(pdf),
   statuteDocument: files(pdf),
   shelterDocument: undefined,
@@ -275,4 +259,13 @@ test("erros de CPF e CNPJ aparecem junto com erros de outros campos", () => {
   assert(organizationResult.error.issues.some((issue) => issue.path[0] === "cnpj"));
   assert(organizationResult.error.issues.some((issue) => issue.path[0] === "responsibleCpf"));
   assert(organizationResult.error.issues.some((issue) => issue.path[0] === "organizationName"));
+});
+
+test("login e cadastros compartilham os requisitos de senha da redefinição", () => {
+  for (const password of ["curta", "abcdefgh1!", "ABCDEFGH1!", "Abcdefghi!", "Abcdefghi1", "Aa1!" + "x".repeat(125)]) {
+    assert.equal(passwordSchema.safeParse(password).success, false);
+    assert.equal(loginSchema.safeParse({ profile: "adopter", email: "ana@example.test", password }).success, false);
+    assert.equal(userRegisterSchema.safeParse({ ...validUserRegistration, password }).success, false);
+  }
+  assert.equal(loginSchema.safeParse({ profile: "adopter", email: "ana@example.test", password: "Senha-segura1!" }).success, true);
 });
