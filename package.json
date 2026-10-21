@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "auth:setup-dev": "node scripts/setup-auth-dev.mjs",
-    "test:auth": "node --test tests/auth.test.mjs"
+    "test:auth": "node --test tests/auth.test.mjs",
+    "test:registration": "node --test tests/registration.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",

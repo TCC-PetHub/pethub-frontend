@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { passwordSchema } from "@/schemas/password";
 
 import {
   isFileList,
@@ -41,6 +42,10 @@ function validateFileList(
 
   if (!multiple && files.length > 1) {
     ctx.addIssue({ code: "custom", message: "Envie apenas um arquivo" });
+  }
+
+  if (fieldName === "identityDocuments" && files.length > 2) {
+    ctx.addIssue({ code: "custom", message: "Envie um documento completo ou dois arquivos: primeiro a frente, depois o verso." });
   }
 
   validateDocumentFiles(files, fieldName, ctx);
@@ -101,10 +106,7 @@ export const userRegisterSchema = z.object({
     .toUpperCase()
     .min(1, "Informe sua UF")
     .refine(isValidStateCode, "Informe uma UF válida"),
-  password: z
-    .string()
-    .min(1, "Informe sua senha")
-    .refine((value) => value.trim().length >= 8, "Mínimo 8 caracteres"),
+  password: passwordSchema,
   identityDocuments: requiredDocumentFilesSchema(
     "identityDocuments",
     "Anexe seu documento de identificação",
@@ -147,10 +149,7 @@ export const organizationRegisterSchema = z.object({
     .refine((value) => isValidDocumentNumber(value, 11), "CPF inválido"),
   responsibleEmail: emailSchema("Informe o e-mail do responsável"),
   accessEmail: emailSchema("Informe o e-mail de acesso"),
-  password: z
-    .string()
-    .min(1, "Informe a senha")
-    .refine((value) => value.trim().length >= 8, "Mínimo 8 caracteres"),
+  password: passwordSchema,
   cnpjDocument: requiredDocumentFilesSchema(
     "cnpjDocument",
     "Anexe o comprovante de CNPJ",
