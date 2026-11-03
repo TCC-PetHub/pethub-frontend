@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { passwordSchema } from "./password";
  
 export const profiles = ["adopter", "organization"] as const;
  
@@ -14,8 +15,7 @@ export const loginSchema = z.object({
     .trim()
     .min(1, "Informe seu e-mail.")
     .pipe(z.email("Informe um e-mail válido.")),
-  // No login basta exigir o campo: regras de tamanho ficam no cadastro.
-  password: z.string().min(1, "Informe sua senha."),
+  password: passwordSchema,
 });
  
 export type LoginField = keyof z.input<typeof loginSchema>;

@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useState } from "react";
 
+import { passwordHelp } from "@/schemas/password";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRight, Hourglass, ShieldCheck, Upload } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 
 import Button from "@/components/common/Button";
+import { submitRegistration } from "@/utils/Register/submitRegistration";
 import { AuthTab, AuthTabs } from "@/components/common/AuthTabs";
 import Brand from "@/components/common/Brand";
 import Input from "@/components/common/Input";
@@ -62,11 +64,14 @@ import {
 export default function UserRegister() {
   const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [pendingReview, setPendingReview] = useState(false);
+  const [confirmationMessage, setConfirmationMessage] = useState("");
+  const [confirmationTitle, setConfirmationTitle] = useState("");
   const { logout } = useAuth();
   const {
     control,
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<UserRegisterData>({
     resolver: zodResolver(userRegisterSchema),
@@ -78,13 +83,8 @@ export default function UserRegister() {
   const documentRegistration = register("identityDocuments");
 
   async function onSubmit(data: UserRegisterData) {
-    console.log({
-      ...data,
-      identityDocuments: Array.from(data.identityDocuments).map(
-        (file) => file.name,
-      ),
-    });
-    setPendingReview(true);
+    const result = await submitRegistration("adopter", data, setError);
+    if (result) { setConfirmationTitle(result.title); setConfirmationMessage(result.message); setPendingReview(true); }
   }
 
   if (pendingReview) {
@@ -107,11 +107,10 @@ export default function UserRegister() {
               />
             </PendingIcon>
             <PendingTitle className="user-registration-analysis-title">
-              Cadastro enviado para análise
+              {confirmationTitle}
             </PendingTitle>
             <PendingText className="user-registration-analysis-description">
-              Recebemos seus dados e documentos. A equipe PetHub fará a análise
-              e entrará em contato pelos canais informados no cadastro.
+              {confirmationMessage}
             </PendingText>
             <BackLink
               className="user-registration-home-link"
@@ -141,6 +140,7 @@ export default function UserRegister() {
         </AuthTabs>
 
         <UserRegistrationForm className="user-registration-form" onSubmit={handleSubmit(onSubmit)} noValidate>
+          {errors.root?.server && <FieldError role="alert">{errors.root.server.message}</FieldError>}
           <RegistrationField className="user-registration-profile-field">
             <FieldLabel as="span">Tipo de cadastro</FieldLabel>
             <ProfileSelector className="user-registration-profile-selector">
@@ -282,8 +282,7 @@ export default function UserRegister() {
                 {...register("password")}
               />
               <FieldHelp className="user-registration-password-help">
-                Use uma senha forte e segura para acompanhar sua solicitação no
-                sistema.
+                {passwordHelp}
               </FieldHelp>
             </RegistrationField>
           </RegistrationSection>
@@ -293,7 +292,8 @@ export default function UserRegister() {
               <RegistrationSectionTitle className="user-registration-identity-title">Conferência de identidade</RegistrationSectionTitle>
               <RegistrationSectionDescription className="user-registration-identity-description">
                 Anexe RG ou CNH para que possamos confirmar sua identidade.
-                Envie frente e verso quando aplicável, em PDF ou imagem, com até
+                Envie um arquivo com o documento completo ou dois arquivos,
+                primeiro a frente e depois o verso. Use PDF ou imagem, com até
                 10 MB por arquivo.
               </RegistrationSectionDescription>
             </div>

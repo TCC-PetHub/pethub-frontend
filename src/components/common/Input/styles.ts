@@ -92,6 +92,10 @@ export const Field = styled("input", {
     hasToggle: {
       true: {
         paddingRight: 48,
+        // Hide Edge's native reveal control; PasswordToggle provides this action.
+        "&::-ms-reveal": {
+          display: "none",
+        },
       },
     },
 

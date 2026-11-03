@@ -46,14 +46,17 @@ export default function RecuperarSenhaPage() {
 
   async function onSubmit(data: ForgotPasswordData) {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 800));
-
-      toast.success(
-        `Enviamos o link de redefinição para ${data.email}. Verifique sua caixa de entrada.`,
-      );
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "Não foi possível enviar o link.");
+      toast.success(result.message);
       reset();
-    } catch {
-      toast.error("Não foi possível enviar o link. Tente novamente.");
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Não foi possível enviar o link. Tente novamente.");
     }
   }
 
