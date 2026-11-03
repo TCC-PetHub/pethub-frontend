@@ -8,11 +8,13 @@ export async function submitRegistration<T extends FieldValues>(profile: "adopte
     else if (value !== undefined) form.set(key, String(value));
   }
   try {
-    const response = await fetch("/api/auth/register", { method: "POST", body: form });
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://127.0.0.1:8000";
+    const response = await fetch(`${apiUrl}/api/auth/register`, { method: "POST", body: form });
     const result = await response.json();
     if (!response.ok) {
-      for (const [key, message] of Object.entries(result.fields ?? {})) if (key in values && typeof message === "string") setError(key as Path<T>, { type: "server", message });
-      setError("root.server", { type: "server", message: result.error ?? "Não foi possível concluir o cadastro." });
+      const error = result.detail ?? result;
+      for (const [key, message] of Object.entries(error.fields ?? {})) if (key in values && typeof message === "string") setError(key as Path<T>, { type: "server", message });
+      setError("root.server", { type: "server", message: error.error ?? "Não foi possível concluir o cadastro." });
       return null;
     }
     if (typeof result.message !== "string" || !result.message) throw new Error("Resposta inválida");
